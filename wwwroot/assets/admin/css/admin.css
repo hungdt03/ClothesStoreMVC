@@ -1,0 +1,152 @@
+﻿
+.wrapper-search .search-bar {
+    min-width: 320px;
+}
+
+@media (max-width: 1199px) {
+    .wrapper-search .search-bar {
+        position: fixed;
+        top: 50px;
+        left: 0;
+        right: 0;
+        padding: 20px;
+        box-shadow: 0px 0px 15px 0px rgba(1, 41, 112, 0.1);
+        background: white;
+        z-index: 9999;
+        transition: 0.3s;
+        visibility: hidden;
+        opacity: 0;
+    }
+
+    .wrapper-search .search-bar-show {
+        top: 60px;
+        visibility: visible;
+        opacity: 1;
+    }
+}
+
+.wrapper-search .search-form {
+    width: 100%;
+}
+
+    .wrapper-search .search-form input {
+        border: 0;
+        font-size: 14px;
+        color: #012970;
+        border: 1px solid rgba(1, 41, 112, 0.2);
+        padding: 7px 38px 7px 8px;
+        border-radius: 3px;
+        transition: 0.3s;
+        width: 100%;
+    }
+
+        .wrapper-search .search-form input:focus,
+        .wrapper-search .search-form input:hover {
+            outline: none;
+            box-shadow: 0 0 10px 0 rgba(1, 41, 112, 0.15);
+            border: 1px solid rgba(1, 41, 112, 0.3);
+        }
+
+    .wrapper-search .search-form button {
+        border: 0;
+        padding: 0;
+        margin-left: -30px;
+        background: none;
+    }
+
+        .wrapper-search .search-form button i {
+            color: #012970;
+        }
+
+
+.pagination-admin {
+    display:inline-block;
+}
+
+    .pagination-admin ul {
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+    }
+
+    .pagination-admin li {
+        display: inline-block;
+        padding: 6px 12px;
+        color: #222;
+        background-color: white;
+    }
+
+    .pagination-admin li a {
+        color: green;
+        width: 100%;
+        display: inline-block;
+    }    
+/* THREE */
+
+.pagination-admin.p3 li.is-active {
+    background-color:green;
+    color: #fff;
+}
+
+    .pagination-admin.p3 li.is-active a {
+        color: #fff;
+    }
+
+
+#custom-badge.badge {
+    display: inline-block;
+    padding: 0.25em 0.4em;
+    font-size: 75%;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.25rem;
+}
+
+#custom-badge.badge-pill {
+    padding-right: 0.6em;
+    padding-left: 0.6em;
+    border-radius: 10rem;
+}
+
+#custom-badge.badge-primary {
+    color: #fff;
+    background-color: #007bff;
+}
+
+#custom-badge.badge-secondary {
+    color: #fff;
+    background-color: #6c757d;
+}
+
+#custom-badge.badge-success {
+    color: #fff;
+    background-color: #28a745;
+}
+
+#custom-badge.badge-danger {
+    color: #fff;
+    background-color: #dc3545;
+}
+
+#custom-badge.badge-warning {
+    color: #212529;
+    background-color: #ffc107;
+}
+
+#custom-badge.badge-info {
+    color: #fff;
+    background-color: #17a2b8;
+}
+
+#custom-badge.badge-light {
+    color: #212529;
+    background-color: #f8f9fa;
+}
+
+#custom-badge.badge-dark {
+    color: #fff;
+    background-color: #343a40;
+}

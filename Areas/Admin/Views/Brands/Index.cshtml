@@ -1,0 +1,114 @@
+﻿@model WebBanQuanAo.Payload.Pagination.PaginationModelView<Brand>
+
+@{
+    ViewData["Title"] = "Danh sách thương hiệu";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<h4>Quản lí thương hiệu</h4>
+<hr />
+
+<div class="d-flex justify-content-between mb-3">
+    <a asp-action="Create" class="btn btn-success">Thêm mới</a>
+
+    <div class="wrapper-search">
+        <div class="search-bar">
+            <form class="search-form d-flex align-items-center" method="GET" asp-action="Index">
+                <input type="hidden" name="pageSize" value="@Model.PageSize">
+                <input type="hidden" name="pageIndex" value="@Model.PageIndex">
+                <input type="text" value="" name="query" placeholder="Search" title="Nhập từ khóa tìm kiếm">
+                <button type="submit" title="Search"><i class="bi bi-search"></i></button>
+            </form>
+        </div>
+    </div>
+
+    <form asp-action="Index" method="get" class="form-inline float-md-right">
+        <select name="pageSize" id="pageSize" class="form-control mr-2" onchange="if(this.value !== '0') this.form.submit()">
+            <option value="0">Chọn số lượng hiển thị</option>
+            <option selected="@(Model.PageSize == 5)" value="5">5</option>
+            <option selected="@(Model.PageSize == 8)" value="8">8</option>
+            <option selected="@(Model.PageSize == 10)" value="10">10</option>
+            <option selected="@(Model.PageSize == 15)" value="15">15</option>
+            <option selected="@(Model.PageSize == 20)" value="20">20</option>
+        </select>
+    </form>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Tên thương hiệu
+            </th>
+            <th>
+                Mô tả
+            </th>
+            <th>Thao tác</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Items)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm text-white">Sửa</a>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-sm text-white">Chi tiết</a>
+                    <button data-controller="Brands"
+                            data-action="Delete"
+                            data-id="@item.Id"
+                            data-bs-toggle="modal"
+                            data-title="XÁC NHẬN XÓA THƯƠNG HIỆU"
+                            data-description="Bạn có chắc là muốn xóa thương hiệu @item.Name không!"
+                            data-bs-target="#modalConfirmAdmin"
+                            class="btn btn-danger btn-sm text-white">
+                        Xóa
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="pagination-admin p3">
+            <ul>
+                @{
+                    int totalItems = Model.TotalRows.Count();
+                    int totalPages = (int)Math.Ceiling((double)totalItems / @Model.PageSize);
+                    <li>
+                        <a asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-pageIndex="1">First</a>
+                    </li>
+                    for (int i = 1; i <= totalPages; i++)
+                    {
+                        if ((i + 2) >= Model.PageIndex && (i - 2) <= Model.PageIndex)
+                        {
+                            <li class="@(i == Model.PageIndex ? "is-active" : "")">
+                                <a asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-pageIndex="@i">@i</a>
+                            </li>
+                        }
+
+                    }
+
+                    <li>
+                        <a asp-action="Index"
+                           asp-route-pageSize="@Model.PageSize"
+                           asp-route-pageIndex="@(totalPages == 0 ? 1 : totalPages)">
+                            Last
+                        </a>
+                    </li>
+                }
+            </ul>
+        </div>
+
+    </div>
+
+</div>
+

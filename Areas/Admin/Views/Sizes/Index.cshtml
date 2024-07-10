@@ -1,0 +1,70 @@
+﻿@model IEnumerable<WebBanQuanAo.Models.Size>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<h4>Quản lí kích cỡ</h4>
+<hr />
+
+<p>
+    <a class="btn btn-success text-white" asp-action="Create">Thêm mới</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ESize)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MinHeight)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MaxHeight)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MinWeight)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MaxWeight)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ESize)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MinHeight)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MaxHeight)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MinWeight)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MaxWeight)
+            </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm">Sửa</a>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-sm">Chi tiết</a>
+                    <button data-controller="Sizes"
+                            data-action="Delete"
+                            data-id="@item.Id"
+                            data-bs-toggle="modal"
+                            data-title="XÁC NHẬN XÓA KÍCH CỠ"
+                            data-description="Bạn có chắc là muốn xóa màu sắc @item.ESize không!"
+                            data-bs-target="#modalConfirmAdmin"
+                            class="btn btn-danger btn-sm text-white">
+                        Xóa
+                    </button>
+                </td>
+        </tr>
+}
+    </tbody>
+</table>

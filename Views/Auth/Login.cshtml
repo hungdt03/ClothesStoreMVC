@@ -1,0 +1,69 @@
+﻿@model WebBanQuanAo.Payload.Auth.LoginModelView;
+@{
+    ViewData["Title"] = "Login";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="page-content">
+    <!--Page Title-->
+    <div class="page section-header text-center">
+        <div class="page-title">
+            <div class="wrapper"><h1 class="page-width">Login</h1></div>
+        </div>
+    </div>
+    <!--End Page Title-->
+
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-sm-12 col-md-6 col-lg-6 main-col offset-md-3">
+                <div class="mb-4">
+                    <form method="post" asp-action="Login" id="CustomerLoginForm" accept-charset="UTF-8" class="contact-form">
+                        <div class="row">
+                            <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                                <div class="form-group">
+                                    <label asp-for="Email">Email</label>
+                                    <input asp-for="Email" autocorrect="off" autocapitalize="off" autofocus="">
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                                <div class="form-group">
+                                    <label asp-for="Password">Password</label>
+                                    <input asp-for="Password" type="password">
+                                    <span asp-validation-for="Password" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="text-center col-12 col-sm-12 col-md-12 col-lg-12">
+                                <input type="submit" class="btn mb-3" value="Sign In">
+                                <p class="mb-4">
+                                    <a href="/Account/Forgot-Passowrd" id="RecoverPassword">Forgot your password?</a> &nbsp; | &nbsp;
+                                    <a href="/Auth/SignUp" id="customer_register_link">Create account</a>
+                                </p>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            @if ((ViewBag.ExternalLogins?.Count ?? 0) != 0)
+            {
+                <section>
+                    <h4>Sử dụng dịch vụ</h4>
+                    <hr />
+                    <form id="external-account" asp-controller="Auth" asp-action="Oauth2Login" method="post" class="form-horizontal">
+                        <div>
+                            <p>
+                                @foreach (var provider in ViewBag.ExternalLogins)
+                                {
+                                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+                                }
+                            </p>
+                        </div>
+                    </form>
+                </section>
+            }
+        </div>
+    </div>
+
+</div>

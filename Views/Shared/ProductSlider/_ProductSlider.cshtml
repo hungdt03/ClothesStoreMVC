@@ -1,0 +1,70 @@
+﻿@using System.Globalization
+@model WebBanQuanAo.Models.Product
+
+@{
+    List<Image> images = Model.Images.ToList();
+}
+
+<div class="col-12 item">
+    <!-- start product image -->
+    <div class="product-image">
+        <!-- start product image -->
+        <a href="/Product/Details/@Model.Id" class="grid-view-item__link">
+            <!-- image -->
+            <img class="primary" min-width="200px" min-height="200px" data-src="@Model.Thumbnail" src="@Model.Thumbnail" alt="image" title="product">
+            <img class="hover" data-src="@Model.ZoomImage" src="@Model.ZoomImage" alt="image" title="product">
+        </a>
+        <!-- end product image -->
+       
+        <div class="button-set">
+            <a href="javascript:void(0)" title="Quick View" class="quick-view-popup quick-view" data-toggle="modal" data-target="#content_quickview" data-product-id="@Model.Id">
+                <i class="icon anm anm-search-plus-r"></i>
+            </a>
+            <div class="wishlist-btn">
+                <a class="wishlist add-to-wishlist" href="wishlist.html">
+                    <i class="icon anm anm-heart-l"></i>
+                </a>
+            </div>
+        </div>
+        <!-- end product button -->
+    </div>
+    <!-- end product image -->
+    <!--start product details -->
+    <div class="product-details text-center">
+        <!-- product name -->
+        <div class="product-name">
+            <a href="product-layout-1.html">@Model.Name</a>
+        </div>
+        <!-- End product name -->
+        <!-- product price -->
+        <div class="product-price">
+            <span class="price">@Model.Price.ToString("C0", new CultureInfo("vi-VN"))</span>
+        </div>
+        <span class="product-review">
+            <span class="reviewLink">
+                @if (Model.Evaluations != null && Model.Evaluations.Count > 0)
+                {
+                    int count = 0;
+                    int numberOfStars = (int)Math.Round(Model.Evaluations.Average(s => s.Stars));
+
+                    for (int i = 0; i < numberOfStars; i++)
+                    {
+                        <i class="fa fa-star"></i>
+                        count++;
+                    }
+
+                    {
+                        for (int i = 0; i < 5 - count; i++)
+                        {
+                            <i class="font-13 fa fa-star-o"></i>
+                        }
+                    }
+                }
+            </span>
+        </span>
+        
+      
+    </div>
+    <!-- End product details -->
+</div>
+

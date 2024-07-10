@@ -1,0 +1,116 @@
+﻿@using System.Globalization
+@model WebBanQuanAo.Models.Order
+
+@{
+    ViewData["Title"] = "Chi tiết đơn hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+
+    string ORDER_STATUS_PENDING = "Đang chờ";
+    string ORDER_STATUS_CONFIRMED = "Đã xác nhận";
+    string ORDER_STATUS_DELIVERING = "Đang vận chuyển";
+    string ORDER_STATUS_SHIPPED = "Đã giao";
+    string ORDER_STATUS_COMPLETED = "Hoàn thành";
+    string ORDER_STATUS_CANCELLED = "Đã hủy";
+    string ORDER_STATUS_REJECTED = "Đã từ chối";
+}
+
+<h3 class="my-4">Quản lí đơn hàng</h3>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="card-title">Thông tin đơn hàng</h5>
+    </div>
+    <div class="card-body pt-4">
+        <dl class="row">
+            <dt class="col-sm-3">Mã đơn hàng</dt>
+            <dd class="col-sm-9">@Model.Id</dd>
+
+            <dt class="col-sm-3">Thời gian đặt</dt>
+            <dd class="col-sm-9">@Model.CreatedAt.ToString("HH:mm:ss dd/MM/yyyy")</dd>
+
+            <dt class="col-sm-3">Tổng tiền</dt>
+            <dd class="col-sm-9">@Model.TotalPrice.ToString("C0", new CultureInfo("vi-VN"))</dd>
+
+            <dt class="col-sm-3">Số lượng</dt>
+            <dd class="col-sm-9">@Model.Quantity</dd>
+
+            <dt class="col-sm-3">Ghi chú đơn hàng</dt>
+            <dd class="col-sm-9">@Model.OrderNote</dd>
+
+            <dt class="col-sm-3">Trạng thái đơn hàng</dt>
+            <dd class="col-sm-9">
+                @if (Model.OrderStatus.Equals(ORDER_STATUS_PENDING))
+                {
+                    <span id="custom-badge" class="badge badge-pill badge-secondary">@Model.OrderStatus</span>
+                }
+
+                @if (Model.OrderStatus.Equals(ORDER_STATUS_CONFIRMED))
+                {
+                    <span id="custom-badge" class="badge badge-pill badge-warning">@Model.OrderStatus</span>
+                }
+
+
+                @if (Model.OrderStatus.Equals(ORDER_STATUS_CANCELLED) || Model.OrderStatus.Equals(ORDER_STATUS_REJECTED))
+                {
+                    <span id="custom-badge" class="badge badge-pill badge-danger">@Model.OrderStatus</span>
+                }
+
+                @if (Model.OrderStatus.Equals(ORDER_STATUS_DELIVERING))
+                {
+                    <span id="custom-badge" class="badge badge-pill badge-info">@Model.OrderStatus</span>
+                }
+
+                @if (Model.OrderStatus.Equals(ORDER_STATUS_COMPLETED))
+                {
+                    <span id="custom-badge" class="badge badge-pill badge-success">@Model.OrderStatus</span>
+                }
+            </dd>
+
+            <dt class="col-sm-3">Người đặt hàng</dt>
+            <dd class="col-sm-9">@Model.OrderInfo.FirstName @Model.OrderInfo.LastName (@Model.OrderInfo.PhoneNumber - @Model.OrderInfo.Email)</dd>
+
+            <dt class="col-sm-3">Phương thức thanh toán</dt>
+            <dd class="col-sm-9">@(Model.Payment.PaymentType == "CASH" ? "Thanh toán khi nhận hàng" : Model.Payment.PaymentType)</dd>
+        </dl>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="card-title">Thông tin sản phẩm</h5>
+    </div>
+    <div class="card-body pt-4">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Tên sản phẩm</th>
+                    <th>Kích cỡ</th>
+                    <th>Màu sắc</th>
+                    <th>Số lượng</th>
+                    <th>Giá</th>
+                    <th>Thành tiền</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.OrderItems)
+                {
+                    <tr>
+                        <td>@item.ProductVariant.Product.Name</td>
+                        <td><b title="(Chiều cao: @item.ProductVariant.Size.MinHeight - @item.ProductVariant.Size.MaxHeight) (Cân nặng: @item.ProductVariant.Size.MinWeight - @item.ProductVariant.Size.MaxWeight)">@item.ProductVariant.Size.ESize</b></td>
+                        <td>@item.ProductVariant.Color.Name</td>
+                        <td>@item.Quantity</td>
+                        <td>@item.Price.ToString("C0", new CultureInfo("vi-VN"))</td>
+                        <td>@item.SubTotal.ToString("C0", new CultureInfo("vi-VN"))</td>
+                        <td><a asp-controller="ProductVariant" asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-sm text-white">Xem sản phẩm</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="text-right">
+    <a asp-action="Edit" class="btn btn-info" asp-route-id="@Model?.Id">Chỉnh sửa</a>
+    <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+</div>

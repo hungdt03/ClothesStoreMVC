@@ -1,0 +1,27 @@
+﻿@model WebBanQuanAo.Models.Product
+
+<div class="grid__item">
+    <div class="mini-list-item">
+        <div class="mini-view_image">
+            <a class="grid-view-item__link" href="/Product/@Model.Id">
+                <img class="grid-view-item__image" src="@Model.Images.First().Url"
+                     alt="">
+            </a>
+        </div>
+        <div class="details">
+            <a class="grid-view-item__title" href="#">@Model.Name</a>
+            <div class="grid-view-item__meta">
+                <span class="product-price__price">
+                    <span class="money">$@Model.Price</span>
+                </span>
+            </div>
+            <div class="product-review">
+                <i class="font-13 fa fa-star"></i>
+                <i class="font-13 fa fa-star"></i>
+                <i class="font-13 fa fa-star"></i>
+                <i class="font-13 fa fa-star"></i>
+                <i class="font-13 fa fa-star"></i>
+            </div>
+        </div>
+    </div>
+</div>

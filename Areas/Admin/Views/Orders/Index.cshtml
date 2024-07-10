@@ -1,0 +1,157 @@
+﻿@model WebBanQuanAo.Payload.Pagination.PaginationModelView<Order>
+@using System.Globalization;
+@{
+    ViewData["Title"] = "Quản lí đơn hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+
+    string ORDER_STATUS_PENDING = "Đang chờ";
+    string ORDER_STATUS_CONFIRMED = "Đã xác nhận";
+    string ORDER_STATUS_DELIVERING = "Đang vận chuyển";
+    string ORDER_STATUS_SHIPPED = "Đã giao";
+    string ORDER_STATUS_COMPLETED = "Hoàn thành";
+    string ORDER_STATUS_CANCELLED = "Đã hủy";
+    string ORDER_STATUS_REJECTED = "Đã từ chối";
+}
+
+<h3>Quản lí đơn hàng</h3>
+<hr />
+
+<div class="d-flex justify-content-between mb-3">
+    <div class="wrapper-search">
+        <div class="search-bar">
+            <form class="search-form d-flex align-items-center" method="GET" asp-action="Index">
+                <input type="hidden" name="pageSize" value="@Model.PageSize">
+                <input type="hidden" name="pageIndex" value="@Model.PageIndex">
+                <input type="text" value="" name="query" placeholder="Search" title="Nhập từ khóa tìm kiếm">
+                <button type="submit" title="Search"><i class="bi bi-search"></i></button>
+            </form>
+        </div>
+    </div>
+
+    <form asp-action="Index" method="get" class="form-inline float-md-right">
+        <select name="pageSize" id="pageSize" class="form-control mr-2" onchange="if(this.value !== '0') this.form.submit()">
+            <option value="0">Chọn số lượng hiển thị</option>
+            <option selected="@(Model.PageSize == 5)" value="5">5</option>
+            <option selected="@(Model.PageSize == 8)" value="8">8</option>
+            <option selected="@(Model.PageSize == 10)" value="10">10</option>
+            <option selected="@(Model.PageSize == 15)" value="15">15</option>
+            <option selected="@(Model.PageSize == 20)" value="20">20</option>
+        </select>
+    </form>
+</div>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Mã đơn hàng</th>
+            <th scope="col">Người đặt</th>
+            <th scope="col">Số điện thoại</th>
+            <th scope="col">Thời gian đặt</th>
+            <th scope="col">Tổng tiền</th>
+            <th scope="col">Trạng thái</th>
+            <th scope="col">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int index = 1;
+            foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>
+                        @item.Id
+                         
+                    </td>
+                    <td>@item.OrderInfo.FirstName @item.OrderInfo.LastName</td>
+                    <td>@item.OrderInfo.PhoneNumber</td>
+                    <td>@item.CreatedAt.ToString("hh:mm:ss dd/MM/yyyy")</td>
+                    <td>@item.TotalPrice.ToString("C0", new CultureInfo("vi-VN"))</td>
+                    
+                    <td>
+                        @if (item.OrderStatus.Equals(ORDER_STATUS_PENDING))
+                        {
+                            <span id="custom-badge" class="badge badge-pill badge-secondary">@item.OrderStatus</span>
+                        }
+
+                        @if (item.OrderStatus.Equals(ORDER_STATUS_CONFIRMED))
+                        {
+                            <span id="custom-badge" class="badge badge-pill badge-warning">@item.OrderStatus</span>
+                        }
+
+
+                        @if (item.OrderStatus.Equals(ORDER_STATUS_CANCELLED) || item.OrderStatus.Equals(ORDER_STATUS_REJECTED))
+                        {
+                            <span id="custom-badge" class="badge badge-pill badge-danger">@item.OrderStatus</span>
+                        }
+
+                        @if (item.OrderStatus.Equals(ORDER_STATUS_DELIVERING))
+                        {
+                            <span id="custom-badge" class="badge badge-pill badge-info">@item.OrderStatus</span>
+                        }
+
+                        @if (item.OrderStatus.Equals(ORDER_STATUS_COMPLETED))
+                        {
+                            <span id="custom-badge" class="badge badge-pill badge-success">@item.OrderStatus</span>
+                        }
+                    </td>
+                    
+                    
+                    <td>
+                        @if (item.OrderStatus.Equals(ORDER_STATUS_PENDING))
+                        {
+                            <a asp-action="Confirmed" asp-route-id="@item.Id" class="btn btn-outline-info btn-sm">Xác nhận</a>
+                            <a asp-action="Rejected" asp-route-id="@item.Id" class="btn btn-outline-danger btn-sm">Hủy đơn</a>
+                        }
+
+                        @if (item.OrderStatus.Equals(ORDER_STATUS_CONFIRMED))
+                        {
+                            <a asp-action="Delivering" asp-route-id="@item.Id" class="btn btn-outline-warning btn-sm">Vận chuyển</a>
+                        }
+
+                        <a class="btn btn-sm btn-info text-white" href="/Admin/Orders/Details/@item.Id">Chi tiết</a>
+
+                    </td>
+                </tr>
+                index++;
+            }
+        }
+    </tbody>
+</table>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="pagination-admin p3">
+            <ul>
+                @{
+                    int totalItems = Model.TotalRows.Count();
+                    int totalPages = (int)Math.Ceiling((double)totalItems / @Model.PageSize);
+                    <li>
+                        <a asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-pageIndex="1">First</a>
+                    </li>
+                    for (int i = 1; i <= totalPages; i++)
+                    {
+                        if ((i + 2) >= Model.PageIndex && (i - 2) <= Model.PageIndex)
+                        {
+                            <li class="@(i == Model.PageIndex ? "is-active" : "")">
+                                <a asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-pageIndex="@i">@i</a>
+                            </li>
+                        }
+
+                    }
+
+                    <li>
+                        <a asp-action="Index"
+                           asp-route-pageSize="@Model.PageSize"
+                           asp-route-pageIndex="@(totalPages == 0 ? 1 : totalPages)">
+                            Last
+                        </a>
+                    </li>
+                }
+            </ul>
+        </div>
+
+    </div>
+
+</div>

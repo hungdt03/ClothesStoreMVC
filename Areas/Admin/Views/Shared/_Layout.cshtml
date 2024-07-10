@@ -1,0 +1,66 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - WebBanQuanAo</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/WebBanQuanAo.styles.css" asp-append-version="true" />
+
+    <!-- Favicons -->
+    <link href="~/assets/admin/img/favicon.png" rel="icon">
+    <link href="~/assets/admin/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="~/assets/admin/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="~/assets/admin/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- Template Main CSS File -->
+    <link href="~/assets/admin/css/style.css" rel="stylesheet">
+    <link href="~/assets/admin/css/admin.css" rel="stylesheet">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+
+
+</head>
+<body>
+   
+    <partial name="~/Areas/Admin/Views/Shared/Header/Header.cshtml" />
+    @await Component.InvokeAsync("Sidebar")
+    <main id="main" class="main">
+         @RenderBody()
+
+        <partial name="~/Areas/Admin/Views/Shared/ModalConfirm/_ModalConfirm.cshtml" />
+    </main>
+    
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <!-- Vendor JS Files -->
+    <script src="~/assets/admin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/assets/user/js/vendor/jquery-3.3.1.min.js"></script>
+ 
+    <!-- Thư viện Toastify JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.11/signalr.min.js"></script>
+
+    <!-- Template Main JS File -->
+    <script src="~/assets/admin/js/main.js"></script>
+    <script src="~/assets/admin/js/chat.js"></script>
+    <script src="~/assets/admin/js/notification.js"></script>
+    <script src="~/assets/admin/js/admin.js"></script>
+   
+
+    @if (ViewContext.HttpContext != null)
+    {
+        @Html.Raw(WebBanQuanAo.Helpers.NotificationsHelper.RenderNotifications(ViewContext.HttpContext))
+    }
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,25 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card text-center">
+                <div class="card-header bg-danger text-white">
+                    <h4>Payment Failed</h4>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-danger" role="alert">
+                        <h5 class="alert-heading">We're sorry!</h5>
+                        <p>Your payment could not be processed.</p>
+                        <hr>
+                        <p class="mb-0">Please try again or contact customer support if the problem persists.</p>
+                    </div>
+                    <a href="/checkout" class="btn btn-primary mt-3">Try Again</a>
+                    <a href="/contact" class="btn btn-secondary mt-3">Contact Support</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

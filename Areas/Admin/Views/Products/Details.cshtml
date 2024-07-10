@@ -1,0 +1,233 @@
+﻿@using System.Globalization
+@model WebBanQuanAo.Models.Product
+
+@{
+    ViewData["Title"] = "Chi tiết sản phẩm";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .icon-trash {
+        top: -10px;
+        right: -2px;
+        cursor: pointer;
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        padding: 2px;
+        background-color: orangered;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 100;
+        transform: scale(0);
+        transition: all .3s linear;
+    }
+
+    #otherImages {
+        max-width: 100px;
+        margin-right: 10px;
+        margin-bottom: 10px;
+    }
+
+    .image-wrapper:hover .icon-trash {
+        transform: scale(1);
+    }
+</style>
+
+<div class="container">
+    <div class="card mb-4">
+        <div class="card-header text-center">
+            <h3 class="font-weight-bold">Thông tin chi tiết sản phẩm</h3>
+        </div>
+        <div class="card-body pt-3">
+            <div class="row">
+                <!-- Left column: Thumbnail, Name, Description -->
+                <div class="col-md-6 text-center">
+                    <img class="img-fluid mb-3" id="productThumbnail" src="@Model.Thumbnail" alt="Product Thumbnail" style="max-width: 100%; height: auto;">
+                    <form id="formChangeThumbnail" method="post" asp-route-id="@Model.Id" asp-action="ChangeThumbnail" enctype="multipart/form-data">
+                        <input hidden id="productAvatar" name="productThumbnail" onchange="previewImage(this)" accept="image/*" type="file" />
+                        <label for="productAvatar" id="btnSelectImage" class="btn btn-sm btn-secondary">Thay đổi ảnh mới</label>
+                        <button id="btnChangeThumbnail" type="submit" class="btn btn-sm btn-success d-none">Lưu lại</button>
+                    </form>
+                    <h4 class="font-weight-bold mt-2">@Model.Name</h4>
+                    <p class="text-muted">@Model.Description</p>
+                </div>
+
+                <!-- Right column: Product details -->
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-4">Giá</dt>
+                        <dd class="col-sm-8 font-weight-bold text-danger">@Model.Price.ToString("C0", new CultureInfo("vi-VN"))</dd>
+
+                        <dt class="col-sm-4">Danh mục</dt>
+                        <dd class="col-sm-8">@Model.Category.Description</dd>
+
+                        <dt class="col-sm-4">Thương hiệu</dt>
+                        <dd class="col-sm-8">@Model.Brand.Name</dd>
+                    </dl>
+                </div>
+            </div>
+
+            <!-- Bottom section: Additional images -->
+            <div class="mt-4">
+                <h5 class="font-weight-bold mb-3">Hình ảnh khác</h5>
+                <div id="image-gallery" class="d-flex flex-wrap gap-3">
+                    @if (Model.Images != null && Model.Images.Count > 0)
+                    {
+                        @foreach (var image in Model.Images)
+                        {
+                            <div class="image-wrapper d-flex justify-content-end align-items-start position-relative">
+                                <button 
+                                    data-id="@image.Id" 
+                                    class="removeOtherImages position-absolute icon-trash"
+                                    data-id="@image.Id"
+                                    data-src="@image.Url"
+                                    data-product-id="@Model.Id"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#modalRemoveImage">
+                                    <i class="bi bi-x-circle"></i>
+                                </button>
+                                <a href="@image.Url" data-id="@image.Id" data-lightbox="product-images" data-title="@Model.Name">
+                                    <img src="@image.Url" class="img-thumbnail" alt="Product Image" style="max-width: 100px; margin-right: 10px; margin-bottom: 10px;" />
+                                </a>
+                            </div>
+                        }
+
+
+                        <button for="otherImages"
+                                class="img-thumbnail h-100 d-flex justify-content-center align-items-center border rounded-3 p-3 border-secondary"
+                                style="cursor: pointer;"
+                                data-bs-toggle="modal"
+                                data-bs-target="#modalAddImage">
+                            <i class="bi bi-plus-lg me-2"></i> Thêm ảnh mới
+                        </button>
+                    }
+                    else
+                    {
+                        <p>Không có hình ảnh cho sản phẩm này.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-right">
+        <a asp-action="Edit" class="btn btn-info" asp-route-id="@Model.Id">Chỉnh sửa</a>
+        <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+    </div>
+</div>
+
+<div class="modal fade" id="modalAddImage" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">THÊM ẢNH MỚI CHO SẢN PHẨM</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formAddImages" method="post" asp-route-id="@Model.Id" asp-action="AddImageProduct" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="formFile" class="form-label">Chọn ảnh</label>
+                        <input class="form-control" name="images" multiple accept="image/*" type="file" id="formFile">
+                        <input hidden type="submit" id="btnSubmitAddImages" />
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <label for="btnSubmitAddImages" class="btn btn-info">Lưu lại</label>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="modalRemoveImage" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">XÁC NHẬN XÓA ẢNH SẢN PHẨM</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <img id="removeImgId" class="img-thumbnail" src="" />
+                Bạn có chắc là muốn xóa ảnh này!
+                <form id="formRemoveImage" method="post" asp-action="RemoveImageProduct">
+                    <input name="imageId" hidden />
+                    <input name="productId" hidden />
+                    <input id="btnRemoveImage" type="submit" hidden />
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ĐÓNG</button>
+                <label for="btnRemoveImage" class="btn btn-primary">XÓA</label>
+            </div>
+        </div>
+    </div>
+</div>
+
+<partial name="~/Areas/Admin/Views/Shared/Spinner/_Spinner.cshtml" />
+
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet" />
+
+    <script>
+        lightbox.option({
+            'resizeDuration': 200,
+            'wrapAround': true,
+            'fitImagesInViewport': true,
+            'disableScrolling': true
+        });
+
+        $(document).ready(function () {
+            $('#formChangeThumbnail').on('submit', function (event) {
+                $('#loadingSpinner').removeClass('d-none');
+                $(this).find('button[type="submit"]').prop('disabled', true);
+            });
+
+            $('#formAddImages').on('submit', function (event) {
+                $('#loadingSpinner').removeClass('d-none');
+                $(this).find('button[type="submit"]').prop('disabled', true);
+            });
+
+            $('#formRemoveImage').on('submit', function (event) {
+                $('#loadingSpinner').removeClass('d-none');
+                $(this).find('button[type="submit"]').prop('disabled', true);
+            });
+        });
+
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#productThumbnail').attr('src', e.target.result);
+                    $('#btnSelectImage').addClass('d-none');
+                    $('#btnChangeThumbnail').removeClass('d-none');
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        $('#modalRemoveImage').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var imageId = button.data('id');
+            var productId = button.data('product-id');
+            var srcImage = button.data('src')
+            var modal = $(this);
+            modal.find('#removeImgId').attr('src', srcImage);
+            modal.find('input[name="imageId"]').val(imageId)
+            modal.find('input[name="productId"]').val(productId)
+        });
+
+
+
+    </script>
+}

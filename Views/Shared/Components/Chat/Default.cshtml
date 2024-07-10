@@ -1,0 +1,46 @@
+﻿@model WebBanQuanAo.Payload.Chat.ChatViewModel
+
+<div id="chat-right-side">
+    <button id="btn-close-chat-side"><i class="fa-solid fa-angle-left"></i></button>
+    <div id="chat-area" class="chat-container">
+        <div id="user-info-area" class="text-center">
+                <span id="target-username" data-username="@Model.RecipientUser.UserName">Chủ cửa hàng</span>
+        </div>
+        <div class="row chat-messages mt-2">
+            <div id="message-wrapper" class="col-12">
+                @foreach (var msg in Model.Messages)
+                {
+                    if (msg.SenderId.Equals(Model.CurrentUserId))
+                    {
+
+                        <div class="message own-message">
+                            <div class="message-content">
+                                <span>@msg.Content</span>
+                                <span class="message-time">@msg.SendAt.ToString("HH:mm")</span>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="message">
+                            <div class="message-content">
+                                <span>@msg.Content</span>
+                                <span class="message-time">@msg.SendAt.ToString("HH:mm")</span>
+                            </div>
+                        </div>
+                    }
+                }
+
+            </div>
+        </div>
+        <div id="chatbox-area" >
+                <form class="input-group mb-3">
+                        <input type="text" id="input-message" class="form-control" placeholder="Nhập tin nhắn...">
+                        <div class="input-group-append">
+                            <button class="btn btn-info btn-sm" id="btn-send-message" type="button">Gửi</button>
+                        </div>
+                </form>
+        </div>
+    </div>
+
+</div>

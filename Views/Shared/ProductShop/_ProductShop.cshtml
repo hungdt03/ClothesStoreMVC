@@ -1,0 +1,61 @@
+﻿@using System.Globalization
+@model WebBanQuanAo.Models.Product
+
+<div class="col-6 col-sm-6 col-md-4 col-lg-3 item">
+    <!-- start product image -->
+    <div class="product-image">
+        <!-- start product image -->
+        <a href="#">
+            <!-- image -->
+            <img class="primary blur-up lazyload" min-width="200px" min-height="200px" data-src="@Model.Thumbnail" src="@Model.Thumbnail" alt="image" title="product">
+            <!-- End image -->
+            <!-- Hover image -->
+            <img class="hover blur-up lazyload" data-src="@Model.ZoomImage" src="@Model.ZoomImage" alt="image" title="product">
+            
+            @if(Model.ProductVariants == null || Model.ProductVariants.Count == 0) {
+                <div class="product-labels rectangular"><span class="lbl pr-label2">Hết hàng</span></div>
+            }
+        </a>
+        <!-- end product image -->
+        <!-- Start product button -->
+        <div class="variants add">
+            <a href="/Product/Details/@Model.Id" class="btn btn-addto-cart">Thêm vào giỏ hàng</a>
+        </div>
+        
+        <div class="button-set">
+            <a href="javascript:void(0)" title="Quick View" class="quick-view-popup quick-view" data-toggle="modal" data-target="#content_quickview" data-product-id="@Model.Id">
+                <i class="icon anm anm-search-plus-r"></i>
+            </a>
+            <div class="wishlist-btn">
+                <a class="wishlist add-to-wishlist" href="#" title="Add to Wishlist">
+                    <i class="icon anm anm-heart-l"></i>
+                </a>
+            </div>
+        </div>
+        <!-- end product button -->
+    </div>
+    <!-- end product image -->
+    <!--start product details -->
+    <div class="product-details text-center">
+        <!-- product name -->
+        <div class="product-name">
+            <a href="/Product/Details/@Model.Id">@Model.Name</a>
+        </div>
+        <!-- End product name -->
+        <!-- product price -->
+        <div class="product-price">
+            <span class="price">@Model.Price.ToString("C0", new CultureInfo("vi-VN"))</span>
+        </div>
+        <!-- End product price -->
+
+        <div class="product-review">
+            <i class="font-13 fa fa-star"></i>
+            <i class="font-13 fa fa-star"></i>
+            <i class="font-13 fa fa-star"></i>
+            <i class="font-13 fa fa-star-o"></i>
+            <i class="font-13 fa fa-star-o"></i>
+        </div>
+    </div>
+    <!-- End product details -->
+ 
+</div>

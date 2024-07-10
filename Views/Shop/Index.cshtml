@@ -1,0 +1,332 @@
+﻿@model WebBanQuanAo.Payload.ShopModelView
+
+<style>
+    
+
+    .sidebar .sidebar_widget.categories .sub-level > a#plus-minus.site-nav.active:after {
+        content: '\ebd1';
+        font-family: 'annimex-icons';
+        display: inline-block;
+    }
+
+    .sidebar .sidebar_widget.categories .sub-level > a#plus-minus.site-nav:after {
+        content: '\ebe0';
+        font-family: 'annimex-icons';
+        display: inline-block;
+        position: absolute;
+        right: 0;
+        top: 3px;
+    }
+</style>
+
+<div id="page-content">
+    <!--Collection Banner-->
+    <div class="collection-header">
+        <div class="collection-hero">
+            <div class="collection-hero__image"><img src="~/assets/user/images/cat-women.jpg" alt="Women" title="Women" /></div>
+            <div class="collection-hero__title-wrapper"><h1 class="collection-hero__title page-width">@(Model?.Category?.Name ?? "Mua sắm ở đây")</h1></div>
+        </div>
+    </div>
+    <!--End Collection Banner-->
+
+    <div class="container mt-5">
+        <div class="row">
+            <!--Sidebar-->
+            <div class="col-12 col-sm-12 col-md-3 col-lg-3 sidebar filterbar">
+                <div class="closeFilter d-block d-md-none d-lg-none"><i class="icon icon anm anm-times-l"></i></div>
+                <div class="sidebar_tags">
+                    <!--Categories-->
+                    <div class="sidebar_widget categories filter-widget">
+                        <div class="widget-title"><h2>Categories</h2></div>
+                        <div class="widget-content">
+                            <ul class="sidebar_categories">
+                                @{
+                                    <li class="lvl-1"><a asp-controller="Shop" asp-action="Index">Tất cả</a></li>
+                                    foreach (var category in Model.Categories)
+                                    {
+                                        @if (category.CategoryChildren != null && category.CategoryChildren.Any())
+                                        {
+                                            <li class="level1 sub-level">
+                                                <a asp-controller="Shop" asp-action="Index" asp-route-categoryId="@category.Id">@category.Name</a>
+                                                <a id="plus-minus" href="javascript:void(0)" class="site-nav"></a>
+                                                @{
+                                                    await RenderCategoryRecursion(category);
+                                                }
+                                            </li>
+
+                                        }
+                                        else
+                                        {
+                                            <li class="lvl-1">
+                                                <a asp-controller="Shop" asp-action="Index" asp-route-categoryId="@category.Id">@category.Name</a>
+                                            </li>
+                                        }
+
+                                    }
+                                }
+
+                                @{
+                                    async Task RenderCategoryRecursion(Category category)
+                                    {
+                                        <ul class="sublinks">
+
+                                            @foreach (var child in category.CategoryChildren)
+                                            {
+                                                if (child.CategoryChildren != null && child.CategoryChildren.Any())
+                                                {
+                                                    <li class="level2 sub-level">
+                                                        <a asp-controller="Shop" asp-action="Index" asp-route-categoryId="@child.Id">@child.Name</a>
+                                                        <a id="plus-minus" href="javascript:void(0)" class="site-nav"></a>
+                                                        @{
+                                                            await RenderCategoryRecursion(child);
+                                                        }
+                                                    </li>
+                                                }
+                                                else
+                                                {
+                                                    <li class="level2">
+                                                        <a asp-controller="Shop" asp-action="Index" asp-route-categoryId="@child.Id">@child.Name</a>
+                                                    </li>
+                                                }
+
+                                            }
+                                        </ul>
+
+
+                                    }
+                                }
+
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!--
+                        <ul class="sublinks">
+                                                <li class="level2">
+                                                </li>
+                                                <li class="level2"><a href="#;" class="site-nav">Women</a></li>
+                                                <li class="level2"><a href="#;" class="site-nav">Child</a></li>
+                                                <li class="level2"><a href="#;" class="site-nav">View All Clothing</a></li>
+                                            </ul>
+                    -->
+                    <!--Categories-->
+                    <!--Price Filter-->
+                    <form method="post" asp-controller="Shop" asp-action="Filter">
+                        <input hidden value="@(Model?.Category?.Id ?? 0)" name="categoryId" type="text">
+                        <div class="sidebar_widget filterBox filter-widget">
+                            <div class="widget-title">
+                                <h2>Price</h2>
+                            </div>
+                            <div class="price-filter">
+                                <div id="slider-range"
+                                     class="ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all"
+                                     data-min="@Model.MinPrice"
+                                     data-max="@Model.MaxPrice"
+                                     data-selectminprice="@Model.SelectMinPrice"
+                                     data-selectmaxprice="@Model.SelectMaxPrice">
+                                    <div class="ui-slider-range ui-widget-header ui-corner-all"></div>
+                                    <span class="ui-slider-handle ui-state-default ui-corner-all" tabindex="0"></span>
+                                    <span class="ui-slider-handle ui-state-default ui-corner-all" tabindex="0"></span>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <p class="no-margin"><input style="width: 80%" id="amount" name="price" type="text"></p>
+                                        <input hidden id="minPrice" value="@Model.MinPrice" name="minPrice" type="text">
+                                        <input hidden id="maxPrice" value="@Model.MaxPrice" name="maxPrice" type="text">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--End Price Filter-->
+                        <!--Size Swatches-->
+                        <div class="sidebar_widget filterBox filter-widget size-swacthes">
+                            <div class="widget-title"><h2>Size</h2></div>
+                            <div class="filter-color swacth-list">
+                                <ul>
+                                    @{
+                                        foreach (var size in Model.Sizes)
+                                        {
+                                            <li>
+                                                @if (Model.CheckedSizeIds.Contains(size.Id))
+                                                {
+                                                    <label for="size-checkbox-@size.Id" class="swacth-btn checked">@size.ESize</label>
+                                                }
+                                                else
+                                                {
+                                                    <label for="size-checkbox-@size.Id" class="swacth-btn">@size.ESize</label>
+                                                }
+
+                                                <input checked="@Model.CheckedSizeIds.Contains(size.Id)" name="sizeIds" hidden type="checkbox" id="size-checkbox-@size.Id" value="@size.Id" />
+                                            </li>
+                                        }
+                                    }
+
+                                </ul>
+                            </div>
+                        </div>
+                        <!--End Size Swatches-->
+                        <!--Color Swatches-->
+                        <div class="sidebar_widget filterBox filter-widget">
+                            <div class="widget-title"><h2>Color</h2></div>
+                            <div class="filter-color swacth-list clearfix">
+
+                                @{
+                                    foreach (var color in Model.Colors)
+                                    {
+                                        <span>
+                                            @if (Model.CheckedColorIds.Contains(color.Id))
+                                            {
+                                                <label for="color-checkbox-@color.Id" style="background-color: @color.HexCode" class="swacth-btn checked"></label>
+                                            }
+                                            else
+                                            {
+                                                <label for="color-checkbox-@color.Id" style="background-color: @color.HexCode" class="swacth-btn"></label>
+                                            }
+
+                                            <input checked="@Model.CheckedColorIds.Contains(color.Id)" name="colorIds" hidden type="checkbox" id="color-checkbox-@color.Id" value="@color.Id" />
+                                        </span>
+                                    }
+                                }
+                            </div>
+                        </div>
+                        <!--End Color Swatches-->
+                        <!--Brand-->
+                        <div class="sidebar_widget filterBox filter-widget">
+                            <div class="widget-title"><h2>Brands</h2></div>
+                            <ul>
+                                @{
+                                    foreach (var brand in Model.Brands)
+                                    {
+                                        <li>
+                                            <input checked="@Model.CheckedBrandIds.Contains(brand.Id)" name="brandIds" type="checkbox" value="@brand.Id" id="brand-checkbox-@brand.Id">
+                                            <label for="brand-checkbox-@brand.Id"><span><span></span></span>@brand.Name</label>
+                                        </li>
+                                    }
+                                }
+
+                            </ul>
+                        </div>
+                        <!--End Brand-->
+
+                        <div class="row margin-25px-top">
+                            <button type="submit" class="btn btn-secondary btn--small col-12">filter</button>
+                        </div>
+                    </form>
+
+                   
+                    <!--end Product Tags-->
+                </div>
+            </div>
+            <!--End Sidebar-->
+            <!--Main Content-->
+            <div class="col-12 col-sm-12 col-md-9 col-lg-9 main-col">
+                @if (Model.Category != null)
+                {
+                    <div class="category-description">
+                        <h3>Mô tả danh mục</h3>
+                        <p>@Model.Category.Description</p>
+                    </div>
+                }
+
+                <hr>
+                <div class="productList product-load-more">
+                    <!--Toolbar-->
+                    <button type="button" class="btn btn-filter d-block d-md-none d-lg-none"> Product Filters</button>
+                    <div class="toolbar">
+                        <div class="filters-toolbar-wrapper">
+                            <div class="row">
+                                <div class="col-4 col-md-4 col-lg-4 filters-toolbar__item collection-view-as d-flex justify-content-start align-items-center">
+                                    <a href="shop-left-sidebar.html" title="Grid View" class="change-view change-view--active">
+                                        <img src="~/assets/user/images/grid.jpg" alt="Grid" />
+                                    </a>
+                                    <a href="shop-listview.html" title="List View" class="change-view">
+                                        <img src="~/assets/user/images/list.jpg" alt="List" />
+                                    </a>
+                                </div>
+                                <div class="col-4 col-md-4 col-lg-4 text-center filters-toolbar__item filters-toolbar__item--count d-flex justify-content-center align-items-center">
+                                    <span class="filters-toolbar__product-count">Showing: 22</span>
+                                </div>
+                                <div class="col-4 col-md-4 col-lg-4 text-right">
+                                    <div class="filters-toolbar__item">
+                                        <label for="SortBy" class="hidden">Sort</label>
+                                        <select name="SortBy" id="SortBy" class="filters-toolbar__input filters-toolbar__input--sort">
+                                            <option value="title-ascending" selected="selected">Sort</option>
+                                            <option>Best Selling</option>
+                                            <option>Alphabetically, A-Z</option>
+                                            <option>Alphabetically, Z-A</option>
+                                            <option>Price, low to high</option>
+                                            <option>Price, high to low</option>
+                                            <option>Date, new to old</option>
+                                            <option>Date, old to new</option>
+                                        </select>
+                                        <input class="collection-header__default-sort" type="hidden" value="manual">
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <!--End Toolbar-->
+                    <div class="grid-products grid--view-items">
+                        <div class="row">
+                            @{
+                                foreach (var product in Model.Products)
+                                {
+                                    <partial name="~/Views/Shared/ProductShop/_ProductShop.cshtml"
+                                             model="@product" />
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="pagination">
+                    <ul>
+                        @{
+                            int totalItems = Model.TotalRows.Count();
+                           
+                            
+                            @if(Model.PageIndex > 1)
+                            {
+                                <li class="">
+                                    <a asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-pageIndex="1">First</a>
+                                </li>
+                                <li class="prev"><a asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-pageIndex="@(Model.PageIndex - 1)"><i class="fa fa-caret-left" aria-hidden="true"></i></a></li>
+                            }
+                            
+                            for (int i = 1; i <= Model.TotalPages; i++)
+                            {
+                                if ((i + 2) >= Model.PageIndex && (i - 2) <= Model.PageIndex)
+                                {
+                                    <li class="@(i == Model.PageIndex ? "active" : "")">
+                                        <a asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-pageIndex="@i">@i</a>
+                                    </li>
+                                }
+
+                            }
+
+                            @if(Model.PageIndex < Model.TotalPages)
+                            {
+                                <li class="next"><a asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-pageIndex="@(Model.PageIndex + 1)"><i class="fa fa-caret-right" aria-hidden="true"></i></a></li>
+                                <li>
+                                    <a asp-action="Index"
+                                       asp-route-pageSize="@Model.PageSize"
+                                       asp-route-pageIndex="@(Model.TotalPages == 0 ? 1 : Model.TotalPages)">
+                                        Last
+                                    </a>
+                                </li>
+                            }
+
+                            
+                            
+                        }
+                      
+                    </ul>
+
+                    
+                </div>
+            </div>
+            <!--End Main Content-->
+        </div>
+    </div>
+
+</div>

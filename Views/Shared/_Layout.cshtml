@@ -1,0 +1,175 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - WebBanQuanAo</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/WebBanQuanAo.styles.css" asp-append-version="true" />
+
+    <link rel="shortcut icon" href="~/assets/user/images/favicon.png" />
+    <!-- Plugins CSS -->
+    <link rel="stylesheet" href="~/assets/user/css/plugins.css">
+    <!-- Bootstap CSS -->
+    <link rel="stylesheet" href="~/assets/user/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Main Style CSS -->
+    <link rel="stylesheet" href="~/assets/user/css/style.css">
+    <link rel="stylesheet" href="~/assets/user/css/chat.css">
+    <link rel="stylesheet" href="~/assets/user/css/responsive.css">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+</head>
+<body class="template-index home2-default">
+    <div id="pre-loader">
+        <img src="~/assets/user/images/loader.gif" alt="Loading..." />
+    </div>
+    <div class="pageWrapper">
+        <partial name="~/Views/Shared/Header/_Header.cshtml" />
+
+        @RenderBody()
+
+        <partial name="~/Views/Shared/Footer/_Footer.cshtml" />
+
+        @if (User.Identity.IsAuthenticated)
+        {
+            <span class="wave-icon mt-5" id="site-chat">
+                <img src="~/assets/user/images/app-images/chat-icon.png" />
+            </span>
+
+        }
+        
+        <span id="site-scroll"><i class="icon anm anm-angle-up-r"></i></span>
+        <!--End Scoll Top-->
+        <!--Quick View popup-->
+        <partial name="~/Views/Shared/QuickViewPopup/_QuickViewPopup.cshtml" />
+        <!--End Quick View popup-->
+        <!-- Newsletter Popup -->
+        <div class="newsletter-wrap" id="popup-container">
+            <div id="popup-window">
+                <a class="btn closepopup"><i class="icon icon anm anm-times-l"></i></a>
+                <!-- Modal content-->
+                <div class="display-table splash-bg">
+                    <div class="display-table-cell width40"><img src="assets/images/newsletter-img.jpg" alt="Join Our Mailing List" title="Join Our Mailing List" /> </div>
+                    <div class="display-table-cell width60 text-center">
+                        <div class="newsletter-left">
+                            <h2>Join Our Mailing List</h2>
+                            <p>Sign Up for our exclusive email list and be the first to know about new products and special offers</p>
+                            <form action="#" method="post">
+                                <div class="input-group">
+                                    <input type="email" class="input-group__field newsletter__input" name="EMAIL" value="" placeholder="Email address" required="">
+                                    <span class="input-group__btn">
+                                        <button type="submit" class="btn newsletter__submit" name="commit" id="subscribeBtn"> <span class="newsletter__submit-text--large">Subscribe</span> </button>
+                                    </span>
+                                </div>
+                            </form>
+                            <ul class="list--inline site-footer__social-icons social-icons">
+                                <li><a class="social-icons__link" href="#" title="Facebook"><i class="fa fa-facebook-official" aria-hidden="true"></i></a></li>
+                                <li><a class="social-icons__link" href="#" title="Twitter"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+                                <li><a class="social-icons__link" href="#" title="Pinterest"><i class="fa fa-pinterest" aria-hidden="true"></i></a></li>
+                                <li><a class="social-icons__link" href="#" title="Instagram"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>
+                                <li><a class="social-icons__link" href="#" title="YouTube"><i class="fa fa-youtube" aria-hidden="true"></i></a></li>
+                                <li><a class="social-icons__link" href="#" title="Vimeo"><i class="fa fa-vimeo" aria-hidden="true"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @if(User.Identity.IsAuthenticated)
+        {
+            @await Component.InvokeAsync("Chat")
+        }
+    </div>
+
+
+
+    <!--  <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script> -->
+
+
+    <script src="~/assets/user/js/vendor/jquery-3.3.1.min.js"></script>
+    <script src="~/assets/user/js/vendor/modernizr-3.6.0.min.js"></script>
+    <script src="~/assets/user/js/vendor/jquery.cookie.js"></script>
+    <script src="~/assets/user/js/vendor/wow.min.js"></script>
+    <!-- Including Javascript -->
+    <script src="~/assets/user/js/bootstrap.min.js"></script>
+    <script src="~/assets/user/js/plugins.js"></script>
+    <script src="~/assets/user/js/popper.min.js"></script>
+    <script src="~/assets/user/js/lazysizes.js"></script>
+
+    <script src="~/assets/user/js/main.js"></script>
+    <script src="~/assets/user/js/cart.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.11/signalr.min.js"></script>
+    <script src="~/assets/admin/js/chat.js"></script>
+    <script src="~/assets/user/js/chat.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    @if (ViewContext.HttpContext != null)
+    {
+        @Html.Raw(WebBanQuanAo.Helpers.NotificationsHelper.RenderNotifications(ViewContext.HttpContext))
+    }
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+
+
+<script>
+    jQuery(document).ready(function () {
+        jQuery('.closepopup').on('click', function () {
+            jQuery('#popup-container').fadeOut();
+            jQuery('#modalOverly').fadeOut();
+        });
+
+        var visits = jQuery.cookie('visits') || 0;
+        visits++;
+        jQuery.cookie('visits', visits, { expires: 1, path: '/' });
+        console.debug(jQuery.cookie('visits'));
+        if (jQuery.cookie('visits') > 1) {
+            jQuery('#modalOverly').hide();
+            jQuery('#popup-container').hide();
+        } else {
+            var pageHeight = jQuery(document).height();
+            jQuery('<div id="modalOverly"></div>').insertBefore('body');
+            jQuery('#modalOverly').css("height", pageHeight);
+            jQuery('#popup-container').show();
+        }
+        if (jQuery.cookie('noShowWelcome')) { jQuery('#popup-container').hide(); jQuery('#active-popup').hide(); }
+    });
+
+    jQuery(document).mouseup(function (e) {
+        var container = jQuery('#popup-container');
+        if (!container.is(e.target) && container.has(e.target).length === 0) {
+            container.fadeOut();
+            jQuery('#modalOverly').fadeIn(200);
+            jQuery('#modalOverly').hide();
+        }
+    });
+
+
+
+    /*--------------------------------------
+        Promotion / Notification Cookie Bar
+      -------------------------------------- */
+    if (Cookies.get('promotion') != 'true') {
+        $(".notification-bar").show();
+    }
+    $(".close-announcement").on('click', function () {
+        $(".notification-bar").slideUp();
+        Cookies.set('promotion', 'true', { expires: 1 });
+        return false;
+    });
+
+
+    /* ======================MODAL QUICKVIEW POPUP========================== */
+
+
+</script>
+
+</html>
+

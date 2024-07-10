@@ -1,0 +1,408 @@
+﻿@using System.Globalization
+@using Microsoft.AspNetCore.Mvc.ModelBinding
+
+@model WebBanQuanAo.Payload.Pagination.PaginationModelView<Order>
+@{
+    ViewData["Title"] = "Lịch sử đặt hàng";
+    Layout = "~/Views/Shared/_CheckoutLayout.cshtml";
+
+    string ORDER_STATUS_PENDING = "Đang chờ";
+    string ORDER_STATUS_CONFIRMED = "Đã xác nhận";
+    string ORDER_STATUS_DELIVERING = "Đang vận chuyển";
+    string ORDER_STATUS_SHIPPED = "Đã giao";
+    string ORDER_STATUS_COMPLETED = "Hoàn thành";
+    string ORDER_STATUS_CANCELLED = "Đã hủy";
+    string ORDER_STATUS_REJECTED = "Đã từ chối";
+}
+
+
+
+<style>
+    .btn-evaluation {
+        color: white;
+        background-color: orange; 
+        padding: 3px 6px;
+        border-radius: 2px;
+        border: none;
+        outline: none;
+        cursor: pointer;
+    }
+
+    .rating {
+        direction: rtl;
+        unicode-bidi: bidi-override;
+    }
+
+        .rating input {
+            display: none;
+        }
+
+        .rating label {
+            font-size: 2rem;
+            color: #ddd;
+            cursor: pointer;
+        }
+
+        .rating input:checked ~ label {
+            color: #f5b301;
+        }
+
+        .rating label:hover,
+        .rating label:hover ~ label {
+            color: #f5b301;
+        }
+
+    .tab-orders-ul li a.active {
+        font-weight: bold;
+    }
+
+    .tab-orders-ul li a:hover {
+        font-weight: bold;
+    }
+</style>
+
+<div class="container">
+    <div class="order-history-header text-center mt-4 mb-4">
+        <h2>Lịch sử đặt hàng</h2>
+    </div>
+
+    <div class="d-flex justify-content-between mb-3 align-center">
+        <ul class="tab-orders-ul">
+            <li>
+                <a class="@(Model.Status == "All" ? "active": "")" href="/Order/OrderHistory">Tất cả đơn hàng</a>
+            </li>
+            <li>
+                <a class="@(Model.Status == "Pending" ? "active": "")" href="/Order/OrderHistory?status=Pending">Đang chờ</a>
+            </li>
+            <li>
+                <a class="@(Model.Status == "Confirmed" ? "active": "")" href="/Order/OrderHistory?status=Confirmed">Đã xác nhận</a>
+            </li>
+            <li>
+                <a class="@(Model.Status == "Delivering" ? "active": "")" href="/Order/OrderHistory?status=Delivering">Đang vận chuyển</a>
+            </li>
+            <li>
+                <a class="@(Model.Status == "Completed" ? "active": "")" href="/Order/OrderHistory?status=Completed">Đã nhận</a>
+            </li>
+        </ul>
+
+        @if(Model.TotalRows.Count > Model.Items.Count)
+        {
+             int totalPages = (int)Math.Ceiling((double)Model.TotalRows.Count / Model.PageSize);
+            
+            <div class="d-flex align-items-center">
+                <span class="mr-2">
+                    @Model.PageIndex / @totalPages
+                </span>
+                <a asp-controller="Order" asp-action="OrderHistory" asp-route-pageIndex="@(Model.PageIndex > 1 ? Model.PageIndex - 1 : 1)" class="btn text-white mr-2">Prev</a>
+                <a asp-controller="Order" asp-action="OrderHistory" asp-route-pageIndex="@(Model.PageIndex < Model.Items.Count ? Model.PageIndex + 1 : Model.Items.Count)" class="btn text-white">Next</a>
+            </div>
+        }
+    </div>
+    @if(Model.TotalRows.Count == 0)
+    {
+        <div class="row justify-content-center align-items-center">
+            <div class="col-12 text-center">
+                <img width="500px" src="~/assets/user/images/app-images/order-empty.png" alt="Empty Cart" class="img-fluid">
+                <h2>CHƯA CÓ ĐƠN HÀNG NÀO</h2>
+            </div>
+        </div>
+
+    } else
+    {
+        <div class="row">
+            @{
+                foreach (var item in Model.Items)
+                {
+                    <div class="col col-md-12">
+                        <div class="card order-card">
+                            <div class="card-header order-header">
+                                <div class="order-info">
+                                    <h5>Mã đơn hàng: #@item.Id</h5>
+                                    <p>Thời gian đặt: @item.CreatedAt.ToString("HH:mm:ss dd:MM:yyyy")</p>
+
+                                </div>
+                                <div class="">
+                                    <h6>Địa chỉ giao hàng:</h6>
+                                    <p>Địa chỉ: @item.OrderInfo.Address</p>
+                                    <p>Phương thức giao hàng: Tiêu chuẩn</p>
+                                </div>
+                                <div class="">
+                                    <h6>Thông tin thanh toán:</h6>
+                                    <p>Phương thức thanh toán: @item.Payment.PaymentType</p>
+                                    <p>Tổng giá: @item.TotalPrice.ToString("C0", new CultureInfo("vi-VN"))</p>
+                                </div>
+
+                            </div>
+                            <div class="d-flex justify-content-between align-content-end py-2 px-2">
+                                <div>
+                                    <span>Trạng thái: </span>
+                                    @if (item.OrderStatus.Equals(ORDER_STATUS_PENDING))
+                                    {
+                                        <span class="badge badge-secondary badge-status">@item.OrderStatus</span>
+                                    }
+
+                                    @if (item.OrderStatus.Equals(ORDER_STATUS_CONFIRMED))
+                                    {
+                                        <span class="badge badge-warning badge-status">@item.OrderStatus</span>
+                                    }
+
+
+                                    @if (item.OrderStatus.Equals(ORDER_STATUS_CANCELLED) || item.OrderStatus.Equals(ORDER_STATUS_REJECTED))
+                                    {
+                                        <span class="badge badge-danger badge-status">@item.OrderStatus</span>
+                                    }
+
+                                    @if (item.OrderStatus.Equals(ORDER_STATUS_DELIVERING))
+                                    {
+                                        <span class="badge badge-info badge-status">@item.OrderStatus</span>
+                                    }
+
+                                    @if (item.OrderStatus.Equals(ORDER_STATUS_COMPLETED))
+                                    {
+                                        <span class="badge badge-success badge-status">@item.OrderStatus</span>
+                                    }
+
+
+                                </div>
+                                <div class="d-flex justify-content-end gap-2">
+                                    @if (item.OrderStatus.Equals(ORDER_STATUS_PENDING))
+                                    {
+                                        <button id="btn-cancel-order"
+                                                data-toggle="modal"
+                                                data-title="XÁC NHẬN HỦY BỎ ĐƠN HÀNG"
+                                                data-description="Bạn có chắc là muốn hủy bỏ đơn hàng không. Chỉ bấm đồng ý nếu bạn chắc chắn!"
+                                                data-controller="Order"
+                                                data-action="Cancel"
+                                                data-id="@item.Id"
+                                                data-target="#modalConfirm">
+                                            HỦY ĐƠN
+                                        </button>
+                                    }
+
+                                    @if (item.OrderStatus.Equals(ORDER_STATUS_DELIVERING))
+                                    {
+                                        <button id="btn-received-order"
+                                                data-toggle="modal"
+                                                data-title="XÁC NHẬN ĐÃ NHẬN ĐƯỢC HÀNG"
+                                                data-description="Bạn có chắc là đã nhận được đơn hàng không. Chỉ bấm đồng ý nếu bạn đã thật sự nhận được hàng!"
+                                                data-controller="Order"
+                                                data-action="Received"
+                                                data-id="@item.Id"
+                                                data-target="#modalConfirm">
+                                            ĐÃ NHẬN
+                                        </button>
+                                    }
+
+                                    <button class="btn btn-link" data-toggle="collapse" data-target="#order-details-@item.Id">Xem chi tiết</button>
+                                </div>
+                            </div>
+                            <div id="order-details-@item.Id" class="collapse">
+                                <div class="card-body">
+                                    <div class="order-details">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Hình ảnh</th>
+                                                    <th>Tên sản phẩm</th>
+                                                    <th>Số lượng</th>
+                                                    <th>Giá</th>
+                                                    <th>Thành tiền</th>
+                                                    @if (item.OrderStatus.Equals(ORDER_STATUS_COMPLETED))
+                                                    {
+                                                        <th>Thao tác</th>
+                                                    }
+
+                                                </tr>
+                                            </thead>
+                                            @{
+                                                foreach (var orderItem in item.OrderItems)
+                                                {
+                                                    <tbody>
+                                                        <tr>
+                                                            <td><img width="80px" src="@(orderItem?.ProductVariant.Images.First().Url ?? "")" alt="Messi Argentina" /></td>
+                                                            <td>
+                                                                @orderItem?.ProductVariant?.Product?.Name
+                                                                <br />
+                                                                (Size: <b>@orderItem?.ProductVariant?.Size?.ESize</b> - Color: <b>@orderItem?.ProductVariant?.Color?.Name</b>)
+                                                            </td>
+                                                            <td>@orderItem.Quantity</td>
+                                                            <td>@orderItem.Price.ToString("C0", new CultureInfo("vi-VN"))</td>
+                                                            <td>@orderItem.SubTotal.ToString("C0", new CultureInfo("vi-VN"))</td>
+
+                                                            @if (item.OrderStatus.Equals(ORDER_STATUS_COMPLETED))
+                                                            {
+                                                                <td>
+                                                                    <button data-product-id="@orderItem.ProductVariant.ProductId"
+                                                                            data-toggle="modal"
+                                                                            class="btn-evaluation">
+                                                                        Đánh giá
+                                                                    </button>
+                                                                </td>
+                                                            }
+
+                                                        </tr>
+                                                        @if (item.OrderStatus.Equals(ORDER_STATUS_COMPLETED))
+                                                        {
+                                                            <tr>
+                                                                <td colspan="5"></td>
+                                                                <td>@item.TotalPrice.ToString("C0", new CultureInfo("vi-VN"))</td>
+                                                            </tr>
+                                                        }
+                                                        else
+                                                        {
+                                                            <tr>
+                                                                <td colspan="4"></td>
+                                                                <td>@item.TotalPrice.ToString("C0", new CultureInfo("vi-VN"))</td>
+                                                            </tr>
+                                                        }
+
+                                                    </tbody>
+                                                }
+                                            }
+
+                                        </table>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                }
+            }
+
+        </div>
+    }
+    <!-- Example order card -->
+   
+    <!-- Repeat order cards as needed -->
+</div>
+
+<!-- Modal -->
+<!-- Modal -->
+<div class="modal fade" id="modalEvaluation" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Đánh giá sản phẩm</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <!-- Product Info -->
+                    <div class="col-md-6">
+                        <div class="product-info">
+                            <img id="product-image" src="https://sumstore.vn/wp-content/uploads/2023/07/psg-den-11.jpg" alt="Product Image" class="img-fluid mb-3">
+                            <h5 id="product-name">Tên sản phẩm</h5>
+                            <p id="product-price">Giá: 1,000,000 VND</p>
+                            <p id="product-description">Mô tả: Đây là một mô tả ngắn về sản phẩm.</p>
+                        </div>
+                    </div>
+                    <!-- Review Form -->
+                    <div class="col-md-6">
+                        
+                        <form method="post" action="/Product/Rating/" id="reviewForm" enctype="multipart/form-data">
+                            <div class="form-group">
+                                <label for="rating">Số sao đánh giá <span class="text-danger">(*)</span></label>
+                                <div class="rating">
+                                    <input type="radio" name="star" id="star5" value="5"><label for="star5">☆</label>
+                                    <input type="radio" name="star" id="star4" value="4"><label for="star4">☆</label>
+                                    <input type="radio" name="star" id="star3" value="3"><label for="star3">☆</label>
+                                    <input type="radio" name="star" id="star2" value="2"><label for="star2">☆</label>
+                                    <input type="radio" name="star" id="star1" value="1"><label for="star1">☆</label>
+                                </div>
+                                
+                            </div>
+                            <div class="form-group">
+                                <label for="reviewContent">Nội dung đánh giá <span class="text-danger">(*)</span></label>
+                                <textarea class="form-control"name="content" id="reviewContent" rows="3"></textarea>
+                               
+                            </div>
+                            <div class="form-group">
+                                <label for="formFileMultiple" class="form-label">Đính kèm ảnh</label>
+                                <input class="form-control" name="images" type="file" id="formFileMultiple" multiple>
+                            </div>
+
+                            <div class="d-flex justify-content-end">
+                                <button type="submit" class="btn btn-primary">Lưu đánh giá</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                
+            </div>
+        </div>
+    </div>
+</div>
+<partial name="~/Views/Shared/Spinner/_Spinner.cshtml" />
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+
+    $(document).ready(function () {
+        $('#reviewForm').on('submit', function (event) {
+            console.log("Submit nè")
+
+            console.log($('#loadingSpinner'))
+            // if (!$(this).valid()) {
+            //     console.log('Tròn daay')
+            //     event.preventDefault();
+            //     return;
+            // }
+            // console.log('dươi nây')
+            $('#loadingSpinner').removeClass('d-none');
+            $(this).find('button[type="submit"]').prop('disabled', true);
+        });
+    });
+
+    $(document).ready(function () {
+        $('.btn-evaluation').each(function () {
+            var button = $(this);
+
+            button.on('click', function (event) {
+                var productId = button.data('product-id');
+                var modal = $('#modalEvaluation');
+                modal.find('#reviewForm').attr('action', '/Product/Rating/' + productId)
+
+                renderProductEvaluation(productId, function (data) {
+                    modal.find('#product-image').attr('src', data.image);
+                    modal.find('#product-name').text(data.name);
+                    modal.find('#product-price').text('Giá: ' + formatCurrencyVND(data.price));
+                    modal.find('#product-description').text(data.description);
+                });
+
+                modal.modal('show');
+            });
+        });
+    });
+
+    function formatCurrencyVND(amount) {
+        return amount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+    }
+
+    function renderProductEvaluation(productId, callback) {
+        $.ajax({
+            url: `/api/Product/${productId}`,
+            type: 'GET',
+            success: function (data) {
+                const productData = {
+                    'image': data.product.thumbnail,
+                    'price': data.product.price,
+                    'name': data.product.name,
+                    'description': data.product.description
+                }
+
+                callback(productData);
+            },
+            error: function (xhr, status, error) {
+                console.error('Failed to fetch product data:', status, error);
+            }
+        });
+       
+    }
+</script>

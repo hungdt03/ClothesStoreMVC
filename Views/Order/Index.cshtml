@@ -1,0 +1,493 @@
+﻿@using System.Globalization
+@model WebBanQuanAo.Payload.Order.AddressInfoModelView
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_CheckoutLayout.cshtml";
+}
+
+<div id="page-content">
+    <!--Page Title-->
+    <div class="page section-header text-center">
+        <div class="page-title">
+            <div class="wrapper"><h1 class="page-width">Checkout</h1></div>
+        </div>
+    </div>
+    <!--End Page Title-->
+    @if (ViewBag.Cart == null || (ViewBag.Cart.CartItems != null && ViewBag.Cart.CartItems.Count == 0))
+    {
+        <div class="row justify-content-center align-items-center">
+            <div class="col-12 text-center">
+                <img width="500px" src="~/assets/user/images/app-images/cart-empty.webp" alt="Empty Cart" class="img-fluid">
+                <div>
+                    <a href="/Shop" class="btn mt-4">MUA SẮM NGAY</a>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 mb-3">
+                    <div class="customer-box returning-customer">
+                        <h3><i class="icon anm anm-user-al"></i> Returning customer? </h3>
+                    </div>
+                </div>
+
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 mb-3">
+                    <div class="customer-box customer-coupon">
+                        <h3 class="font-15 xs-font-13"><i class="icon anm anm-gift-l"></i> Have a coupon? </h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row billing-fields">
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 sm-margin-30px-bottom">
+                    <div class="payment-accordion">
+                        <div id="accordion" class="payment-section">
+                            <div class="card mb-2">
+                                <div class="card-header">
+                                    <a class="collapsed card-link" data-toggle="collapse" href="#collapseTwo">THÊM ĐỊA CHỈ GIAO HÀNG MỚI</a>
+                                </div>
+                                <div id="collapseTwo" class="collapse" data-parent="#accordion">
+                                    <div class="create-ac-content bg-light-gray padding-20px-all">
+
+                                        <form asp-controller="Order" asp-action="CreateAddress" method="post">
+                                            <fieldset>
+                                                <h2 class="login-title mb-3">Billing details</h2>
+                                                <div class="row">
+                                                    <div class="form-group col-md-6 col-lg-6 col-xl-6">
+                                                        <label asp-for="FirstName">Họ <span class="required-f">*</span></label>
+                                                        <input asp-for="FirstName" />
+                                                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                                                    </div>
+                                                    <div class="form-group col-md-6 col-lg-6 col-xl-6">
+                                                        <label asp-for="LastName">Tên <span class="required-f">*</span></label>
+                                                        <input asp-for="LastName" />
+                                                        <span asp-validation-for="LastName" class="text-danger"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="form-group col-md-6 col-lg-6 col-xl-6">
+                                                        <label asp-for="Email">Địa chỉ email <span class="required-f">*</span></label>
+                                                        <input asp-for="Email" />
+                                                        <span asp-validation-for="Email" class="text-danger"></span>
+                                                    </div>
+                                                    <div class="form-group col-md-6 col-lg-6 col-xl-6">
+                                                        <label asp-for="PhoneNumber">Số điện thoại <span class="required-f">*</span></label>
+                                                        <input asp-for="PhoneNumber" />
+                                                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+
+                                            <fieldset>
+                                                <div class="row">
+                                                    <div class="form-group col-md-6 col-lg-6 col-xl-6">
+                                                        <label asp-for="Province">Tỉnh thành</label>
+                                                        <select asp-for="Province" id="tinh" class="css_select" asp-items="ViewBag.Provinces"></select>
+                                                        <span asp-validation-for="Province" class="text-danger"></span>
+                                                    </div>
+                                                    <div class="form-group col-md-6 col-lg-6 col-xl-6">
+                                                        <label asp-for="District">Quận Huyện</label>
+                                                        <select asp-for="District" id="quan" class="css_select" asp-items="ViewBag.Districts"></select>
+                                                        <span asp-validation-for="District" class="text-danger"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="form-group col-md-6 col-lg-6 col-xl-6">
+                                                        <label asp-for="Commune">Phường Xã</label>
+                                                        <select asp-for="Commune" id="phuong" class="css_select" asp-items="ViewBag.Communes"></select>
+                                                        <span asp-validation-for="Commune" class="text-danger"></span>
+                                                    </div>
+                                                    <div class="form-group col-md-6 col-lg-6 col-xl-6">
+                                                        <label asp-for="HomeNumber">Số nhà <span class="required-f">*</span></label>
+                                                        <input asp-for="HomeNumber" id="homeNumber" />
+                                                        <span asp-validation-for="HomeNumber" class="text-danger"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="form-group col-md-12 col-lg-12 col-xl-12">
+                                                        <label asp-for="Address">Địa chỉ <span class="required-f">*</span></label>
+                                                        <input asp-for="Address" id="address-order" />
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+
+                                            <div class="order-button-payment">
+                                                <button class="btn" type="submit">Thêm mới</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card mb-2">
+                                <div class="card-header">
+                                    <a class="card-link" data-toggle="collapse" href="#collapseOne">Chọn địa chỉ có sẵn</a>
+                                </div>
+                                <div id="collapseOne" class="collapse in show" data-parent="#accordion">
+                                    <div class="card-body">
+                                        <ul class="list-group">
+                                            @foreach (var orderInfo in ViewBag.OrderInfos)
+                                            {
+                                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                    <label class="form-check-label pl-2">
+                                                        <input class="form-check-input me-2" type="radio" name="selectedOrderInfoId" value="@orderInfo.Id"
+                                                        @(orderInfo.IsDefault ? "checked" : "")>
+                                                        @orderInfo.Address
+                                                    </label>
+                                                    @if (orderInfo.IsDefault)
+                                                    {
+                                                        <span class="badge bg-success text-white">Mặc định</span>
+                                                    }
+                                                </li>
+                                            }
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card mb-2">
+                                <div class="card-header">
+                                    <a class="collapsed card-link" data-toggle="collapse" href="#collapseThree">LỰA CHỌN PHƯƠNG THỨC THANH TOÁN</a>
+                                </div>
+                                <div id="collapseThree" class="collapse in show" data-parent="#accordion">
+                                    <div class="card-body">
+                                        <ul class="list-group">
+
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                <label class="form-check-label pl-2">
+                                                    <input class="form-check-input me-2" type="radio" checked name="paymentMethod" value="OFFLINE" />
+                                                    Thanh toán khi nhận hàng
+                                                </label>
+
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                <label class="form-check-label pl-2">
+                                                    <input class="form-check-input me-2" type="radio" name="paymentMethod" value="ONLINE" />
+                                                    Thanh toán trực tuyến
+                                                </label>
+
+                                            </li>
+                                        </ul>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <fieldset>
+                        <div class="row">
+                            <div class="form-group col-md-12 col-lg-12 col-xl-12">
+                                <label >Ghi chú đơn hàng <span class="required-f">*</span></label>
+                                <textarea id="orderNote" class="resize-both" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                </div>
+
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                    <div class="your-order-payment">
+                        <div class="your-order">
+                            <h2 class="order-title mb-4">ĐƠN HÀNG CỦA BẠN</h2>
+
+                            <div class="table-responsive-sm order-table">
+                                <table class="bg-white table table-bordered table-hover text-center">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-left">Tên sản phẩm</th>
+                                            <th>Gía</th>
+                                            <th>Kích cỡ</th>
+                                            <th>Màu sắc</th>
+                                            <th>Số lượng</th>
+                                            <th>Thành tiền</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @{
+                                            foreach (CartItem item in ViewBag?.Cart?.CartItems)
+                                            {
+                                                                <tr>
+                                                                    <td class="text-left">@item.ProductVariant.Product.Name</td>
+                                                    <td>@item.Price.ToString("C0", new CultureInfo("vi-VN"))</td>
+                                                                    <td>@item.ProductVariant.Size.ESize</td>
+                                                                    <td>@item.ProductVariant.Color.Name</td>
+                                                                    <td>@item.Quantity</td>
+                                                                    <td>@item.SubTotal.ToString("C0", new CultureInfo("vi-VN"))</td>
+                                                                </tr>
+                                            }
+                                        }
+
+                                    </tbody>
+                                    <tfoot class="font-weight-600">
+                                        <tr>
+                                            <td colspan="5" class="text-right">Shipping </td>
+                                            <td>0.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="5" class="text-right">Total</td>
+                                            <td>@ViewBag?.Cart?.TotalPrice.ToString("C0", new CultureInfo("vi-VN"))</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+
+                        <hr />
+                        <div class="your-payment-offline">
+                            <button id="your-payment-offline" class="btn">ĐẶT HÀNG NGAY</button>
+                        </div>
+
+                        <div class="your-payment-online d-none">
+                            <h2 class="payment-title mb-3">THANH TOÁN TRỰC TUYẾN</h2>
+                            <div class="payment-method row">
+                                <div class="col-6">
+                                    <div class="text-center">
+                                        <div id="paypal-button-container"></div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="text-center">
+                                        <div style="cursor: pointer;" id="vnpay-button" class="shadow-sm row pl-2 d-flex align-items-center gap-2">
+                                            <img width="35px" src="~/assets/user/images/app-images/vnpay.png" />
+                                            <span>Thanh toán với VNPAY</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+
+
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalPaymentMethod" tabindex="-1" role="dialog" aria-labelledby="modalLabelPaymentMethod" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabelPaymentMethod">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+
+
+    <script src="https://www.paypal.com/sdk/js?client-id=@ViewBag.ClientId"></script>
+
+    <script>
+        const paymentMethodRadio = document.querySelectorAll("input[name='paymentMethod']")
+        paymentMethodRadio.forEach((item) => {
+            item.addEventListener("change", (e) => {
+                if (item.checked) {
+                    const checkValue = item.value;
+
+                    if (checkValue === "ONLINE") {
+                        document.querySelector('.your-payment-online').classList.remove('d-none')
+                        document.querySelector('.your-payment-offline').classList.add('d-none')
+                    } else {
+                        document.querySelector('.your-payment-online').classList.add('d-none')
+                        document.querySelector('.your-payment-offline').classList.remove('d-none')
+                    }
+                }
+            })
+        })
+
+        const addressInfoRadio = document.querySelectorAll('input[name="selectedOrderInfoId"]')
+        addressInfoRadio.forEach(item => {
+            item.addEventListener('change', () => {
+                if(item.checked) {
+                    fetchSetAddressInfo(item.value)
+                }
+            })
+        })
+
+        function fetchSetAddressInfo(orderInfoId) {
+            fetch("/Order/SetAddressInfoOrder", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "orderInfoId": orderInfoId
+                })
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    console.log("Thành công")
+                })
+                .catch(error => {
+                    console.error('There was a problem with your fetch operation:', error);
+                    
+                });
+        }
+
+        const btnVnpay = document.getElementById('vnpay-button')
+        btnVnpay.addEventListener('click', () => {
+            const orderNoteTag = document.getElementById('orderNote')
+            console.log(orderNoteTag);
+            console.log(orderNoteTag.value);
+            console.log(orderNoteTag.innerText);
+
+            const payload = {
+                "orderNote": orderNoteTag.value
+            }
+
+            fetch("/Order/PlaceOrderVnpay", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            }).then(res => res.json())
+                .then(res => window.location.href=res.url)
+                
+        })
+
+        const orderCash = document.getElementById('your-payment-offline')
+        orderCash.addEventListener('click', () => {
+            const orderNoteTag = document.getElementById('orderNote')
+            const payload = {
+                "orderNote": orderNoteTag.value
+            }
+
+            fetch("/Order/PlaceOrderCash", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            }).then(response => {
+                if (!response.ok) {
+                    window.location.href = "/Home/Index"
+                }
+                window.location.href="/Order/OrderHistory"
+            })
+                .catch(error => {
+                    window.location.href = "/Home/Index"
+
+                });
+        })
+
+        paypal.Buttons({
+            style: {
+                layout: 'vertical',
+                color: 'silver',
+                tagline: 'false'
+            },
+            createOrder: (data, actions) => {
+                return fetch("@Url.Action("PlaceOrderPayPal")", {
+                    method: "post",
+                }).then((response) => {
+                    if (!response.ok) {
+                        return response.json().then(error => { throw error; });
+                    }
+
+                    return response.json();
+                }).then((order) => order.id)
+                    .catch(error => alert(error.message));
+            },
+            onApprove: (data, actions) => {
+                return fetch(`/Payment/Capture?orderId=${data.orderID}`, {
+                    method: "post",
+                })
+            }
+        }).render('#paypal-button-container');
+    </script>
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+<script src="https://esgoo.net/scripts/jquery.js"></script>
+
+<script>
+    $(document).ready(function () {
+        var addressArr = new Array(4).fill("");
+
+        var addressOrder = $('#address-order');
+        // Lấy tỉnh thành
+        $.getJSON('https://esgoo.net/api-tinhthanh/1/0.htm', function (data_tinh) {
+            if (data_tinh.error == 0) {
+                $.each(data_tinh.data, function (key_tinh, val_tinh) {
+                    $("#tinh").append(`<option data-id="${val_tinh.id}" value="${val_tinh.full_name}">${val_tinh.full_name}</option>`);
+                });
+
+                // Sự kiện khi chọn tỉnh thành
+                $("#tinh").change(function (e) {
+                    province = $(this).find('option:selected').val();
+                    addressArr[3] = province;
+                    addressArr[2] = "";
+                    addressArr[1] = "";
+
+                    addressOrder.val(addressArr.filter(item => item).join());
+                    var idtinh = $(this).find('option:selected').data('id'); // Lấy giá trị data-id của tỉnh thành đã chọn
+                    // Lấy quận huyện
+                    $.getJSON(`https://esgoo.net/api-tinhthanh/2/${idtinh}.htm`, function (data_quan) {
+                        if (data_quan.error == 0) {
+                            $("#quan").html('<option value="0">Quận Huyện</option>');
+                            $("#phuong").html('<option value="0">Phường Xã</option>');
+                            $.each(data_quan.data, function (key_quan, val_quan) {
+                                $("#quan").append(`<option data-id="${val_quan.id}" value="${val_quan.full_name}">${val_quan.full_name}</option>`);
+                            });
+
+                            // Sự kiện khi chọn quận huyện
+                            $("#quan").change(function (e) {
+
+                                district = $(this).find('option:selected').val();
+                                addressArr[2] = district;
+                                addressArr[1] = "";
+                                addressOrder.val(addressArr.filter(item => item).join(", "));
+
+                                var idquan = $(this).find('option:selected').data('id'); // Lấy giá trị data-id của quận huyện đã chọn
+                                // Lấy phường xã
+                                $.getJSON(`https://esgoo.net/api-tinhthanh/3/${idquan}.htm`, function (data_phuong) {
+                                    if (data_phuong.error == 0) {
+                                        $("#phuong").html('<option value="0">Phường Xã</option>');
+                                        $.each(data_phuong.data, function (key_phuong, val_phuong) {
+                                            $("#phuong").append(`<option data-id="${val_phuong.id}" value="${val_phuong.full_name}">${val_phuong.full_name}</option>`);
+                                        });
+
+                                        $("#phuong").change(function (e) {
+
+                                            commune = $(this).find('option:selected').val();
+                                            addressArr[1] = commune;
+                                            addressOrder.val(addressArr.filter(item => item).join(", "));
+                                        });
+                                    }
+                                });
+                            });
+                        }
+                    });
+                });
+            }
+        });
+
+        var homeNumber = $("#homeNumber");
+        homeNumber.change(function () {
+            addressArr[0] = $(this).val();
+            addressOrder.val(addressArr.filter(item => item).join(", "));
+        })
+    });
+</script>

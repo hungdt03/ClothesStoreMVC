@@ -1,0 +1,6 @@
+.toast-container[b-9vl1cjxox6] {
+    position: fixed;
+    top: 20px; /* Điều chỉnh khoảng cách từ trên xuống dưới */
+    right: 20px; /* Điều chỉnh khoảng cách từ phải sang trái */
+    z-index: 1000; /* Đảm bảo toast notification luôn hiển thị trên cùng */
+}

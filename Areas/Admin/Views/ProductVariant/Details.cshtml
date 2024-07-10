@@ -1,0 +1,41 @@
+﻿@model WebBanQuanAo.Models.ProductVariant
+
+@{
+    ViewData["Title"] = "Chi tiết biến thể sản phẩm";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<h3>@ViewData["Title"]</h3>
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+        <dl class="row">
+            <dt class="col-sm-4">ID</dt>
+            <dd class="col-sm-8">@Html.DisplayFor(model => model.Id)</dd>
+
+            <dt class="col-sm-4">Tồn kho</dt>
+            <dd class="col-sm-8">@Html.DisplayFor(model => model.InStock)</dd>
+
+            <dt class="col-sm-4">Kích cỡ</dt>
+            <dd class="col-sm-8">@Html.DisplayFor(model => model.Size.ESize)</dd>
+
+            <dt class="col-sm-4">Màu sắc</dt>
+            <dd class="col-sm-8">@Html.DisplayFor(model => model.Color.Name)</dd>
+
+            <dt class="col-sm-4">Sản phẩm</dt>
+            <dd class="col-sm-8">@Html.DisplayFor(model => model.Product.Name)</dd>
+
+            <dt class="col-sm-4">Thương hiệu</dt>
+            <dd class="col-sm-8">@Html.DisplayFor(model => model.Product.Brand.Name)</dd>
+
+            <dt class="col-sm-4">Danh mục</dt>
+            <dd class="col-sm-8">@Html.DisplayFor(model => model.Product.Category.Name)</dd>
+        </dl>
+    </div>
+</div>
+
+<div class="mt-3">
+    <a asp-action="Edit" class="btn btn-info mr-2" asp-route-id="@Model?.Id">Chỉnh sửa</a>
+    <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+</div>

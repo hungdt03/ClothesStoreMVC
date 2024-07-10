@@ -1,0 +1,125 @@
+﻿@model WebBanQuanAo.Payload.Chat.ChatViewModel
+
+<style>
+    #chat-area.chat-container {
+        display: flex;
+        flex-direction: column;
+        height: 85vh;
+        position: relative;
+        box-shadow: 1px 3px 5px #ccc;
+        background-color: white;
+    }
+
+    .chat-messages {
+        flex: 1; /* Chiếm phần còn lại của chat-container */
+        overflow-y: auto; /* Cho phép thanh cuộn dọc khi cần */
+        padding: 10px; /* Tạo khoảng cách giữa các tin nhắn */
+    }
+
+    .message {
+        display: flex;
+        margin-bottom: 15px;
+        padding-top: 10px;
+    }
+
+        .message .message-content {
+            padding: 10px;
+            border-radius: 10px;
+            background-color: #f0f0f0;
+        }
+
+        .message .message-time {
+            font-size: 12px;
+            color: #777;
+            margin-left: 5px;
+        }
+
+        .message .message-sender {
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
+    .own-message {
+        justify-content: flex-end;
+    }
+
+    .message.own-message .message-content {
+        background-color: #DCF8C6;
+        align-self: flex-end;
+    }
+
+    .message.own-message .message-time {
+        align-self: flex-end;
+    }
+
+    .message.own-message .message-sender {
+        align-self: flex-end;
+    }
+
+    
+    #user-info-area {
+        background-color: white;
+        z-index: 10;
+        padding: 18px 8px;
+        box-shadow: 1px 2px 4px #ccc;
+    }
+
+    #chatbox-area {
+        background-color: white;
+        z-index: 10;
+        padding: 5px;
+    }
+
+    #target-username {
+        font-weight: bold;
+    }
+    
+    </style>
+
+
+<div id="chat-area" class="container-fluid chat-container">
+    <div id="user-info-area" class="row">
+        <div class="col-6">
+            <span id="target-username" data-username="@Model.RecipientUser.UserName">@Model.RecipientUser.FullName</span>
+        </div>
+    </div>
+    <div class="row chat-messages">
+        <div id="message-wrapper" class="col-12">
+            @foreach (var msg in Model.Messages)
+            {
+                if (msg.SenderId.Equals(Model.CurrentUserId))
+                {
+                   
+                    <div class="message own-message">
+                        <div class="message-content">
+                            <span>@msg.Content</span>
+                            <span class="message-time">@msg.SendAt.ToString("HH:mm")</span>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="message">
+                        <div class="message-content">
+                            <span>@msg.Content</span>
+                            <span class="message-time">@msg.SendAt.ToString("HH:mm")</span>
+                        </div>
+                    </div>
+                }
+            }
+
+        </div>
+    </div>
+    <div id="chatbox-area" class="row">
+        <div class="col-12">
+            <form class="input-group mb-3">
+                <input type="text" id="input-message" class="form-control" placeholder="Type your message...">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" id="btn-send-message" type="button">Send</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+

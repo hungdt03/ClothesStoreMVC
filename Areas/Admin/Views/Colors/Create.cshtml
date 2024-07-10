@@ -1,0 +1,67 @@
+﻿@model WebBanQuanAo.Models.Color
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<h4>Quản lí màu sắc</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" class="needs-validation" novalidate>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group mb-3">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" required  />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="HexCode" class="form-label">Chọn màu sắc</label>
+                <div class="d-flex gap-2">
+                    <input id="colorPickerInput" type="color" class="form-control form-control-color" asp-for="HexCode" value="#563d7c" title="Chọn màu sắc">
+                    <input id="renderHexCodeInput" readonly value="#563d7c" class="form-control" required />
+                </div>
+                <span asp-validation-for="HexCode" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <input type="submit" value="Thêm" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Quay lại</a>
+</div>
+
+
+<partial name="~/Areas/Admin/Views/Shared/Spinner/_Spinner.cshtml" />
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+
+      
+
+        $(document).ready(function () {
+            $('#createProductForm').on('submit', function (event) {
+
+                if (!$(this).valid()) {
+                    event.preventDefault();
+                    return;
+                }
+
+                $('#loadingSpinner').removeClass('d-none');
+                $(this).find('button[type="submit"]').prop('disabled', true);
+            });
+
+            $('#colorPickerInput').on('input', function (event) {
+                $('#renderHexCodeInput').val(event.target.value)
+            });
+        });
+    </script>
+}

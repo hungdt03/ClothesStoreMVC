@@ -1,0 +1,121 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Checkout &ndash; </title>
+    
+
+    <link rel="shortcut icon" href="~/assets/user/images/favicon.png" />
+    <!-- Plugins CSS -->
+    <link rel="stylesheet" href="~/assets/user/css/plugins.css">
+    <!-- Bootstap CSS -->
+    <link rel="stylesheet" href="~/assets/user/css/bootstrap.min.css">
+    <!-- Main Style CSS -->
+    <link rel="stylesheet" href="~/assets/user/css/style.css">
+    <link rel="stylesheet" href="~/assets/user/css/responsive.css">
+
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/WebBanQuanAo.styles.css" asp-append-version="true" />
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+   
+</head>
+<body class="page-template belle">
+    <div id="pre-loader">
+        <img src="~/assets/user/images/loader.gif" alt="Loading..." />
+    </div>
+    <div class="pageWrapper">
+        <partial name="~/Views/Shared/Header/_Header.cshtml" />
+        @RenderBody()
+        <partial name="~/Views/Shared/Footer/_Footer.cshtml" />
+        <span id="site-scroll"><i class="icon anm anm-angle-up-r"></i></span>
+        <!--End Scoll Top-->
+        <!--Quick View popup-->
+        <partial name="~/Views/Shared/QuickViewPopup/_QuickViewPopup.cshtml" />
+
+        <partial name="~/Views/Shared/ModalConfirm/_ModalConfirm.cshtml" />
+        
+        <!--End Quick View popup-->
+    </div>
+
+    <script src="~/assets/user/js/vendor/jquery-3.3.1.min.js"></script>
+    <script src="~/assets/user/js/vendor/modernizr-3.6.0.min.js"></script>
+    <script src="~/assets/user/js/vendor/wow.min.js"></script>
+    <script src="~/assets/user/js/bootstrap.min.js"></script>
+    <script src="~/assets/user/js/plugins.js"></script>
+    <script src="~/assets/user/js/popper.min.js"></script>
+    <script src="~/assets/user/js/lazysizes.js"></script>
+    <!-- Thư viện jquery cookie -->
+    <script src="~/assets/user/js/vendor/jquery.cookie.js"></script>
+
+    <!-- Thư viện toastr -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <script src="~/assets/user/js/main.js"></script>
+    <script src="~/assets/user/js/cart.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @if (ViewContext.HttpContext != null)
+    {
+        @Html.Raw(WebBanQuanAo.Helpers.NotificationsHelper.RenderNotifications(ViewContext.HttpContext))
+    }
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+
+
+<script>
+    jQuery(document).ready(function () {
+        jQuery('.closepopup').on('click', function () {
+            jQuery('#popup-container').fadeOut();
+            jQuery('#modalOverly').fadeOut();
+        });
+
+        var visits = jQuery.cookie('visits') || 0;
+        visits++;
+        jQuery.cookie('visits', visits, { expires: 1, path: '/' });
+        console.debug(jQuery.cookie('visits'));
+        if (jQuery.cookie('visits') > 1) {
+            jQuery('#modalOverly').hide();
+            jQuery('#popup-container').hide();
+        } else {
+            var pageHeight = jQuery(document).height();
+            jQuery('<div id="modalOverly"></div>').insertBefore('body');
+            jQuery('#modalOverly').css("height", pageHeight);
+            jQuery('#popup-container').show();
+        }
+        if (jQuery.cookie('noShowWelcome')) { jQuery('#popup-container').hide(); jQuery('#active-popup').hide(); }
+    });
+
+    jQuery(document).mouseup(function (e) {
+        var container = jQuery('#popup-container');
+        if (!container.is(e.target) && container.has(e.target).length === 0) {
+            container.fadeOut();
+            jQuery('#modalOverly').fadeIn(200);
+            jQuery('#modalOverly').hide();
+        }
+    });
+
+
+
+    /*--------------------------------------
+        Promotion / Notification Cookie Bar
+      -------------------------------------- */
+    if (Cookies.get('promotion') != 'true') {
+        $(".notification-bar").show();
+    }
+    $(".close-announcement").on('click', function () {
+        $(".notification-bar").slideUp();
+        Cookies.set('promotion', 'true', { expires: 1 });
+        return false;
+    });
+
+
+    /* ======================MODAL QUICKVIEW POPUP========================== */
+
+
+</script>
+
+</html>
+

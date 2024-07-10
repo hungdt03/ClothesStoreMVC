@@ -1,0 +1,179 @@
+﻿@model WebBanQuanAo.Payload.Product.ProductViewHome
+@{
+    ViewData["Title"] = "Home Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div id="page-content">
+
+    <!--Home slider-->
+    <div class="slideshow slideshow-wrapper pb-section">
+        <div class="home-slideshow">
+            <div class="slide">
+                <div class="blur-up lazyload">
+                    <img data-src="~/assets/user/images/slideshow-banners/home2-default-banner1.jpg" src="~/assets/user/images/slideshow-banners/home2-default-banner1.jpg" alt="Shop Our New Collection" title="Shop Our New Collection" />
+                    <div class="slideshow__text-wrap slideshow__overlay classic middle">
+                        <div class="slideshow__text-content middle">
+                            <div class="container">
+                                <div class="wrap-caption right">
+                                    <h2 class="h1 mega-title slideshow__title">Our New Collection</h2>
+                                    <span class="mega-subtitle slideshow__subtitle">Save up to 50% Off</span>
+                                    <span class="btn">Shop now</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slide">
+                <div class="blur-up lazyload">
+                    <img data-src="~/assets/user/images/slideshow-banners/home2-default-banner1.jpg" src="~/assets/user/images/slideshow-banners/home2-default-banner2.jpg" alt="Summer Bikini Collection" title="Summer Bikini Collection" />
+                    <div class="slideshow__text-wrap slideshow__overlay classic middle">
+                        <div class="slideshow__text-content middle">
+                            <div class="container">
+                                <div class="wrap-caption center">
+                                    <h2 class="h1 mega-title slideshow__title">Fashion &amp; Show</h2>
+                                    <span class="mega-subtitle slideshow__subtitle">A World Fashion and Trendy Fashion Clother's</span>
+                                    <span class="btn">Shop now</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--End Home slider-->
+    <!--Weekly Bestseller-->
+    <div class="section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="section-header text-center">
+                        <h2 class="h2">Weekly Bestseller</h2>
+                        <p>Our most popular products based on sales</p>
+                    </div>
+                    <div class="productSlider grid-products">
+                        @{
+                            foreach(var product in Model.BestSellerProducts)
+                            {
+                                <partial 
+                                    name="~/Views/Shared/ProductSlider/_ProductSlider.cshtml"
+                                    model="@product"
+                                />
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Weekly Bestseller-->
+    <!--Parallax Section-->
+    <div class="section">
+        <div class="hero hero--large hero__overlay bg-size">
+            <img class="bg-img" src="~/assets/user/images/parallax-banners/parallax-banner.jpg" alt="" />
+            <div class="hero__inner">
+                <div class="container">
+                    <div class="wrap-text left text-small font-bold">
+                        <h2 class="h2 mega-title">Belle <br> The best choice for your store</h2>
+                        <div class="rte-setting mega-subtitle">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.</div>
+                        <a href="#" class="btn">Purchase Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--End Parallax Section-->
+    <!--New Arrivals-->
+    <div class="product-rows section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="section-header text-center">
+                        <h2 class="h2">New Arrivals</h2>
+                        <p>Grab these new items before they are gone!</p>
+                    </div>
+                </div>
+            </div>
+            <div class="grid-products">
+                <div class="row">
+                    @{
+                        foreach (var product in Model.Products)
+                        {
+                            <partial name="~/Views/Shared/ArrivalProduct/_ArrivalProduct.cshtml"
+                                     model="@product" />
+                        }
+                    }
+                </div>
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 text-center">
+                        <a href="shop-left-sidebar.html" class="btn">View all</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="product-rows section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="section-header text-center">
+                        <h2 class="h2">Favorite Products</h2>
+                        <p>Grab these new items before they are gone!</p>
+                    </div>
+                </div>
+            </div>
+            <div class="grid-products">
+                <div class="row">
+                    @{
+                        foreach (var product in Model.FavoriteProducts)
+                        {
+                            <partial name="~/Views/Shared/ArrivalProduct/_ArrivalProduct.cshtml"
+                                     model="@product" />
+                        }
+                    }
+                </div>
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 text-center">
+                        <a href="shop-left-sidebar.html" class="btn">View all</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+    <!--End Featured Product-->
+    <!--Logo Slider-->
+    <div class="section logo-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="section-header text-center">
+                        <h2 class="h2">The Most Loved Brands</h2>
+                    </div>
+                    <div class="logo-bar">
+                        <div class="logo-bar__item">
+                            <img src="~/assets/user/images/logo/brandlogo1.png" alt="" title="" />
+                        </div>
+                        <div class="logo-bar__item">
+                            <img src="~/assets/user/images/logo/brandlogo2.png" alt="" title="" />
+                        </div>
+                        <div class="logo-bar__item">
+                            <img src="~/assets/user/images/logo/brandlogo3.png" alt="" title="" />
+                        </div>
+                        <div class="logo-bar__item">
+                            <img src="~/assets/user/images/logo/brandlogo4.png" alt="" title="" />
+                        </div>
+                        <div class="logo-bar__item">
+                            <img src="~/assets/user/images/logo/brandlogo5.png" alt="" title="" />
+                        </div>
+                        <div class="logo-bar__item">
+                            <img src="~/assets/user/images/logo/brandlogo6.png" alt="" title="" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--End Logo Slider-->
+</div>

@@ -1,0 +1,52 @@
+﻿@model IEnumerable<WebBanQuanAo.Models.Color>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<h4>Quản lí màu sắc</h4>
+<hr />
+
+<p>
+    <a class="btn btn-success text-white" asp-action="Create">Thêm mới</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.HexCode)
+            </th>
+            <th>Thao tác</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+                <td>
+                    <div style="width: 30px; height: 30px; background-color: @item.HexCode;"></div>
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm">Sửa</a>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-sm">Chi tiết</a>
+                    <button data-controller="Colors"
+                            data-action="Delete"
+                            data-id="@item.Id"
+                            data-bs-toggle="modal"
+                            data-title="XÁC NHẬN XÓA MÀU SẮC"
+                            data-description="Bạn có chắc là muốn xóa màu sắc @item.Name không!"
+                            data-bs-target="#modalConfirmAdmin"
+                            class="btn btn-danger btn-sm text-white">
+                        Xóa
+                    </button>
+                </td>
+        </tr>
+}
+    </tbody>
+</table>

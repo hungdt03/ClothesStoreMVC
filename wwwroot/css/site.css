@@ -1,0 +1,79 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+/* ============= CSS OF ORDER HISTORY PAGE =================*/
+
+.order-card {
+    margin-bottom: 20px;
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white;
+    height: 100%;
+}
+
+.badge-status {
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.card-header::before {
+    content: ''
+}
+
+.tab-orders-ul {
+    display: flex;
+    list-style-type: none;
+    gap: 20px;
+}
+
+    .tab-orders-ul li a {
+        font-weight: semibold;
+        text-decoration: none;
+    }
+
+#btn-cancel-order {
+    padding: 2px 12px;
+    border-radius: 2px;
+    color: white;
+    background-color: orangered;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+#btn-received-order {
+    padding: 2px 12px;
+    border-radius: 2px;
+    color: white;
+    background-color: forestgreen;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+
+@keyframes spinner-border {
+    100% {
+        transform: rotate(360deg);
+    }
+}

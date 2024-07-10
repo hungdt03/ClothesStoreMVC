@@ -1,0 +1,26 @@
+﻿@model WebBanQuanAo.Models.Category
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<h3>Chi tiết danh mục</h3>
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+        <dl class="row">
+            <dt class="col-sm-4">Tên danh mục</dt>
+            <dd class="col-sm-8">@Html.DisplayFor(model => model.Name)</dd>
+
+            <dt class="col-sm-4">Mô tả</dt>
+            <dd class="col-sm-8">@Html.DisplayFor(model => model.Description)</dd>
+        </dl>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Edit" class="btn btn-info" asp-route-id="@Model?.Id">Chỉnh sửa</a> |
+    <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+</div>
